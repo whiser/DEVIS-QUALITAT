@@ -1,0 +1,53 @@
+ <div class="vd_content-section clearfix">
+                                    <!--col-md-7 -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="panel widget" >
+                                                <div class="panel-heading vd_bg-grey">
+                                                    <h3 class="panel-title">
+                                                        <span class="menu-icon">
+                                                        <i class="fa fa-dot-circle-o"></i></span>
+                                                        Ajouter le client
+                                                    </h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <form class="form-horizontal" method="POST" action="add.php">
+
+                                                        <div class="form-group "><div class="col-12 controls">
+                                                                <input type="text" name="c_name" placeholder="Nom du client">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group form-actions">
+                                                            <div class="col-12">
+                                                                <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="saveclient"> Valider</button>
+                                                                <button class="btn vd_btn" type="button">Cancel</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="panel widget"  >
+                                                <div class="panel-heading vd_bg-grey">
+                                                    <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-dot-circle-o"></i> </span> Nom du client </h3>
+                                                </div>
+                                                <div class="panel-body table-responsive">
+                                                            <?php
+                                                            $sql = $conn->prepare("SELECT * FROM `devis_client`ORDER BY id DESC LIMIT 1");
+                                                            $sql->execute();
+                                                            while ($fetch = $sql->fetch()) {
+                                                            ?> <br>
+                                                                <td><?php echo $fetch['c_name'] ?></td>
+                                                                </tr>
+                                                </div>
+                                            <?php } ?>
+                                            </div>
+                                        </div>
+                                        <!-- Panel Widget -->
+                                    </div>
+
+
+                                <!-- .col-md-5 -->
+                            </div>
