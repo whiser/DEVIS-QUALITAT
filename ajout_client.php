@@ -125,6 +125,15 @@ if(isset($_POST['update'])){
       <script type="text/javascript" src="js/respond.min.js"></script>     
     <![endif]-->
 
+    <script>
+        if(!window.pagedata)
+        {
+            pagedata = {
+
+            };
+        }
+    </script>
+
 </head>
 
 <body id="dashboard" class="full-layout  nav-right-hide nav-right-start-hide  nav-top-fixed responsive    clearfix"
@@ -513,12 +522,32 @@ if(isset($_POST['update'])){
                                                 </table><br />
                                                 <br />
                                                 <label class="form-label">Choisissez un panneau : </label>
+
+                                                
+                                                
+                                                
                                                 <select id="mySelect" class="form-select" aria-label="Default select example" onchange="myFunction()">
-                                                    <option selected>---</option>
-                                                    <option value="Mono Crystalin">Mono Crystalin</option>
-                                                    <option value="Poly Crystalin">Poly Crystalin</option>
+                                                <option>---</option>
+                                                <?php
+                                                    
+                                                        $sql = $conn->prepare("SELECT * FROM `panneau`");
+                                                        $sql->execute();
+                                                        while ($fetch = $sql->fetch()) {
+                                                            $pan = $fetch['type_panneau']. ' - '. $fetch['tension_panneau'] . 'V - '.$fetch['puissance_panneau'].'KW';
+                                                               ?>
+                                                    <option value="<?php  echo $pan;  ?>">
+                                                       
+                                                    <?php  echo $pan;  ?>
+                                                        
+                                                    </option>  <?php } ?> 
                                                 </select>
-                                                <br><br>
+
+                                                <script>
+                                                    pagedata.mySelect = document.getElementById("mySelect").value;
+
+                                                </script>
+                                                
+                                                <br><br> 
 
                                                 <br><br>
 
@@ -702,7 +731,7 @@ if(isset($_POST['update'])){
                                                                                         <table style="margin-left: 20px;">
                                                                                             <tr>
                                                                                                 <td>Type depanneau choisi : </td>
-                                                                                                <td id="demo"></td>
+                                                                                                <td id="demoselect"></td>
                                                                                             </tr>
                                                                                             <tr>
                                                                                                 <td>Nombre de panneau à utiliser : </td>
@@ -824,8 +853,8 @@ if(isset($_POST['update'])){
 
     <script>
         function myFunction() {
-            var x = document.getElementById("mySelect").value;
-            document.getElementById("demo").innerHTML = "Panneau Choisi :  " + x;
+            pagedata.mySelect = document.getElementById("mySelect").value;
+            document.getElementById("demoselect").innerHTML = "  " + pagedata.mySelect;
         }
     </script>
 
