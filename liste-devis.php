@@ -367,6 +367,7 @@ include 'requete.php';
                                                         <tr>
                                                             <th>#</th>
                                                             <th>Nom du client</th>
+                                                            <th>Date</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -380,6 +381,7 @@ include 'requete.php';
                                                             <tr>
                                                                 <td><?php echo $j ?></td>
                                                                 <td><?php echo $row['c_name'] ?></td>
+                                                                <td><?php echo $row['date'] ?></td>
                                                                 <td class="menu-action">
                                                                      <a href="ajout_client.php?n=<?php echo $row['id'] ?>">
                                                                      <button type="button" class="btn vd_btn vd_bg-blue ">Voir le devis</button>
@@ -413,19 +415,7 @@ include 'requete.php';
         <!-- .content -->
 
         <!-- Footer Start -->
-        <footer class="footer-1" id="footer">
-            <div class="vd_bottom ">
-                <div class="container">
-                    <div class="row">
-                        <div class=" col-xs-12">
-                            <div class="copyright">
-                                Copyright &copy;2014 Venmond Inc. All Rights Reserved
-                            </div>
-                        </div>
-                    </div><!-- row -->
-                </div><!-- container -->
-            </div>
-        </footer>
+        
 
     </div>
 

@@ -157,9 +157,9 @@ if (isset($_POST['submit'])) {
                                 <div class="vd_register-page">
                                     <div class="heading clearfix">
                                         <div class="logo">
-                                            <h2 class="mgbt-xs-5"><img src="img/logo.png" alt="logo"></h2>
+                                            <h2 class="mgbt-xs-5"><img src="img/logo1.png" alt="logo"></h2>
                                         </div>
-                                        <h4 class="text-center font-semibold vd_grey">USER REGISTRATION</h4>
+                                        <h4 class="text-center font-semibold vd_grey">INSCRIPTION</h4>
                                     </div>
                                     <div class="panel widget">
                                         <?php
@@ -238,8 +238,8 @@ if (isset($_POST['submit'])) {
                                         </div>
                                     </div>
                                     <!-- Panel Widget -->
-                                    <div class="register-panel text-center font-semibold"> Already Have an Account? <br />
-                                        <a href="index.php">SIGN IN<span class="menu-icon"><i class="fa fa-angle-double-right fa-fw"></i></span></a>
+                                    <div class="register-panel text-center font-semibold"> Déja inscrit ? <br />
+                                        <a href="index.php">Se connecter<span class="menu-icon"><i class="fa fa-angle-double-right fa-fw"></i></span></a>
                                     </div>
                                 </div>
                                 <!-- vd_login-page -->

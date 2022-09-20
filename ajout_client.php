@@ -24,6 +24,18 @@ if (isset($_POST['saveapp'])) {
     $conn = null;
     header('location:ajout_client.php?n=' . $id_client);
 }
+
+if(isset($_POST['update'])){
+
+    $c_name = $_POST['c_name'];
+    
+    
+    $req  = $conn->prepare("UPDATE `devis_client` SET c_name = :c_name WHERE  id = :id");
+    $req ->execute(array(
+        'c_name' => $c_name,
+        'id' => $id_client ));
+ }
+ 
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,8 +61,7 @@ if (isset($_POST['saveapp'])) {
 
 
     <!-- CSS -->
-    <link href="plugins/dataTables/css/jquery.dataTables.html" rel="stylesheet" type="text/css">
-    <link href="plugins/dataTables/css/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
+
     <!-- Bootstrap & FontAwesome & Entypo CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -84,7 +95,7 @@ if (isset($_POST['saveapp'])) {
     <link href="css/theme.min.css" rel="stylesheet" type="text/css">
     <!--[if IE]> <link href="css/ie.css" rel="stylesheet" > <![endif]-->
     <link href="css/chrome.css" rel="stylesheet" type="text/chrome"> <!-- chrome only css -->
-    <link href="custom/custom.css" rel="stylesheet" type="text/chrome">
+
 
 
     <!-- Responsive CSS -->
@@ -116,8 +127,14 @@ if (isset($_POST['saveapp'])) {
 
 </head>
 
-<body id="dashboard" class="full-layout  nav-right-hide nav-right-start-hide  nav-top-fixed      responsive    clearfix" data-active="dashboard " data-smooth-scrolling="1">
+<body id="dashboard" class="full-layout  nav-right-hide nav-right-start-hide  nav-top-fixed responsive    clearfix"
+    data-active="dashboard " data-smooth-scrolling="1">
     <div class="vd_body">
+    <?php
+        $select_profile = $conn->prepare("SELECT * FROM `users` WHERE id = ?");
+        $select_profile->execute([$user_id]);
+        $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
+        ?>
         <!-- Header Start -->
         <header class="header-1" id="header">
             <div class="vd_top-menu-wrapper">
@@ -128,12 +145,16 @@ if (isset($_POST['saveapp'])) {
                                 <a href=""><img alt="logo" src="img/logo.png"></a>
                             </div>
                             <!-- logo -->
-                            <div class="vd_panel-menu  hidden-sm hidden-xs" data-intro="<strong>Minimize Left Navigation</strong><br/>Toggle navigation size to medium or small size. You can set both button or one button only. See full option at documentation." data-step=1>
-                                <span class="nav-medium-button menu" data-toggle="tooltip" data-placement="bottom" data-original-title="Medium Nav Toggle" data-action="nav-left-medium">
+                            <div class="vd_panel-menu  hidden-sm hidden-xs"
+                                data-intro="<strong>Minimize Left Navigation</strong><br/>Toggle navigation size to medium or small size. You can set both button or one button only. See full option at documentation."
+                                data-step=1>
+                                <span class="nav-medium-button menu" data-toggle="tooltip" data-placement="bottom"
+                                    data-original-title="Medium Nav Toggle" data-action="nav-left-medium">
                                     <i class="fa fa-bars"></i>
                                 </span>
 
-                                <span class="nav-small-button menu" data-toggle="tooltip" data-placement="bottom" data-original-title="Small Nav Toggle" data-action="nav-left-small">
+                                <span class="nav-small-button menu" data-toggle="tooltip" data-placement="bottom"
+                                    data-original-title="Small Nav Toggle" data-action="nav-left-small">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </span>
 
@@ -146,19 +167,7 @@ if (isset($_POST['saveapp'])) {
 
 
                             </div>
-                            <!-- <div class="vd_panel-menu visible-sm visible-xs">
-                	<span class="menu visible-xs" data-action="submenu">
-	                    <i class="fa fa-bars"></i>
-                    </span>        
-                          
-                        <span class="menu visible-sm visible-xs" data-action="toggle-navbar-right">
-                            <i class="fa fa-comments"></i>
-                        </span>                   
-                   	 
-            </div>       -->
-                            <!-- vd_panel-menu -->
                         </div>
-                        <!-- vd_panel-header -->
 
                     </div>
                     <div class="vd_container">
@@ -172,74 +181,13 @@ if (isset($_POST['saveapp'])) {
                                         <ul class="mega-ul">
 
                                             <li id="top-menu-profile" class="profile mega-li">
-                                                <a href="#" class="mega-link" data-action="click-trigger">
+                                            <a href="#">
                                                     <span class="mega-image">
                                                         <img src="uploaded_img/<?= $fetch_profile['image']; ?>" alt="">
                                                     </span>
                                                     <span class="mega-name"> <?= $fetch_profile['name']; ?> <i class="fa fa-caret-down fa-fw"></i>
                                                     </span>
-                                                </a>
-                                                <div class="vd_mega-menu-content  width-xs-2  left-xs left-sm" data-action="click-target">
-                                                    <div class="child-menu">
-                                                        <div class="content-list content-menu">
-                                                            <ul class="list-wrapper pd-lr-10">
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-user"></i></div>
-                                                                        <div class="menu-text">Edit Profile</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-trophy"></i></div>
-                                                                        <div class="menu-text">My Achievements</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-envelope"></i></div>
-                                                                        <div class="menu-text">Messages</div>
-                                                                        <div class="menu-badge">
-                                                                            <div class="badge vd_bg-red">10</div>
-                                                                        </div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-tasks
-                                                                                "></i></div>
-                                                                        <div class="menu-text"> Tasks</div>
-                                                                        <div class="menu-badge">
-                                                                            <div class="badge vd_bg-red">5</div>
-                                                                        </div>
-                                                                    </a> </li>
-                                                                <li class="line"></li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-lock
-                                                                                "></i></div>
-                                                                        <div class="menu-text">Privacy</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-cogs"></i></div>
-                                                                        <div class="menu-text">Settings</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class="  fa fa-key"></i></div>
-                                                                        <div class="menu-text">Lock</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-sign-out"></i></div>
-                                                                        <div class="menu-text">Sign Out</div>
-                                                                    </a> </li>
-                                                                <li class="line"></li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-question-circle"></i>
-                                                                        </div>
-                                                                        <div class="menu-text">Help</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" glyphicon glyphicon-bullhorn"></i>
-                                                                        </div>
-                                                                        <div class="menu-text">Report a Problem</div>
-                                                                    </a> </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                                </a>            
                                             </li>
                                         </ul>
                                         <!-- Head menu search form ends -->
@@ -398,17 +346,38 @@ if (isset($_POST['saveapp'])) {
                                                                 <td>
                                                                     <h3><?php echo $fetch['c_name'] ?></h3>
                                                                 </td>
-                                                                <td class="menu-action"> <a data-original-title="edit" data-toggle="tooltip" data-placement="top" class="btn menu-icon vd_bd-yellow vd_yellow"> <i class="fa fa-pencil"></i> </a>
-                                                                    <a href="page/delete/delete_client.php?id=<?php echo $fetch['id'] ?>" data-original-title="delete" data-toggle="tooltip" data-placement="top" class="btn menu-icon vd_bd-red vd_red"> <i class="fa fa-times"></i> </a>
+                                                                <td class="menu-action"> 
+                                                                    <a 
+                                                                    class="btn menu-icon vd_bd-yellow vd_yellow" data-toggle="modal" data-target="#editcname">
+                                                                     <i class="fa fa-pencil"></i> </a>
                                                                 </td>
                                                             </tr>
 
 
                                                     </tbody>
-                                                <?php } ?>
                                                 </table>
                                             </div>
-
+                                            <div class="modal fade" id="editcname" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" style="width: 100wh;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header vd_bg-blue vd_white">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Modifié le nom du client
+                                                                </h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <form action="" method="POST">
+                                                                                    <input type="text"  name="c_name" value="<?php echo $fetch['c_name'] ?> " > <br> <br>
+                                                                                    <input type="submit" value="Mettre à jour" name="update" class="btn btn-primary" >
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                        </div><?php } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- Panel Widget -->
@@ -509,6 +478,9 @@ if (isset($_POST['saveapp'])) {
                                                     </tbody>
 
                                                 <?php } ?>
+
+
+
                                                 <tfoot>
                                                     <?php
                                                     $sqlsump = $conn->prepare("SELECT SUM(puissance)  AS PU
@@ -542,169 +514,218 @@ if (isset($_POST['saveapp'])) {
                                                 <br />
                                                 <label class="form-label">Choisissez un panneau : </label>
                                                 <select id="mySelect" class="form-select" aria-label="Default select example" onchange="myFunction()">
-                                                <option selected>---</option>
-                                                <option value="Mono Crystalin">Mono Crystalin</option>
-                                                <option value="Poly Crystalin">Poly Crystalin</option>
+                                                    <option selected>---</option>
+                                                    <option value="Mono Crystalin">Mono Crystalin</option>
+                                                    <option value="Poly Crystalin">Poly Crystalin</option>
                                                 </select>
                                                 <br><br>
 
-                                                
-                                                    
-                                                 <br>
+                                                <br><br>
+
                                                 <p>
-                                                <button class="btn btn-primary " data-toggle="modal"
-                                                        data-target="#myModal"> Voir le devis </button>
-                                                    
+                                                    <!-- <button class="btn btn-primary " onclick="generatePDF()"> Télécharger le devis </button> -->
+                                                    <button class="btn btn-primary " data-toggle="modal" data-target="#myModal"> Voir le devis </button>
+
                                                 </p>
 
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog" style="width: 100wh;">
                                                         <div class="modal-content">
-                                                            <div class="modal-header vd_bg-blue vd_white">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-                                                                <h4 class="modal-title" id="myModalLabel">Modal title
-                                                                </h4>
-                                                            </div>
                                                             <div class="modal-body">
                                                                 <div class="row">
-                                                                    <div class="col-md-12" id="GFG">
+                                                                    <div class="col-md-12">
                                                                         <div class="panel widget light-widget">
-                                                                            <div class="panel-body" style="padding:20px;">
-                                                                                <div class="row">
-                                                                                
-                                                                                    <div class="col-sm-6">  
-                                                                                        <div>
-                                                                                            <img alt="logo" src="img/logo1.png" style="height: 50px;" />
-                                                                                        </div>
 
-                                                                                        
-                                                                                        
-                                                                                        
-                                                                                    </div>
-                                                                                    <div class="col-sm-6">
-                                                                                        <table class="table table-bordered">
-                                                                                            <tr>
-                                                                                                <th>CODE</th>
-                                                                                                <th>Date</th>
-                                                                                            </tr>
-                                                                                            <tr>
-                                                                                                <td><?php echo $id_client;  ?></td>
-                                                                                                <?php $date = date('d-m-y');  ?>
-                                                                                                <td><?php echo $date; ?></td>
-                                                                                            </tr>
-                                                                                        </table>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="pull-center text-center">
-                                                                                    <h3 class="font-semibold mgbt-xs-20">DEVIS</h3>
-                                                                                </div>
 
-                                                                                <div class="pd-25">
-                                                                                    <div class="row">
-                                                                                        <div class="col-xs-4">
-                                                                                            <h4 style="font-weight: bold;" >Nom du client:</h4><br>
-                                                                                                
-                                                                                        </div>
-                                                                                        <div class="col-xs-4">
-                                                                                            <address>
-                                                                                                <strong><?php
+                                                                            <div class="container" id="divName">
+                                                                                <style>
+                                                                                    .grid-container {
+                                                                                        display: grid;
+                                                                                        grid-template-columns: auto auto;
+                                                                                        gap: 10px;
+                                                                                        padding: 10px;
+                                                                                    }
+
+                                                                                    .grid-container-2 {
+                                                                                        display: grid;
+                                                                                        grid-template-columns: auto auto;
+                                                                                        gap: 10px;
+                                                                                        padding: 10px;
+                                                                                    }
+                                                                                    .grid-container-3 {
+                                                                                        display: grid;
+                                                                                        grid-template-columns: auto auto;
+                                                                                        gap: 10px;
+                                                                                        padding: 10px;
+                                                                                    }
+
+
+                                                                                    .invoice-head td {
+                                                                                        padding: 0 8px;
+                                                                                    }
+
+                                                                                    .container {
+                                                                                        padding-top: 30px;
+                                                                                        padding-left: 20px;
+                                                                                        padding-right: 20px;
+                                                                                        padding-bottom: 20px;
+                                                                                    }
+
+                                                                                    .invoice-body {
+                                                                                        background-color: transparent;
+                                                                                    }
+
+                                                                                    @media print {
+                                                                                        @page {
+                                                                                            margin-top: 0;
+                                                                                            margin-bottom: 0;
+                                                                                        }
+                                                                                        body  {
+                                                                                            padding-top: 5rem;
+                                                                                            padding-bottom: 5rem;
+                                                                                        }
+                                                                                        }
+                                                                                </style>
+                                                                                <div class="grid-container">
+                                                                                    <div>
+                                                                                        <img alt="logo" src="img/logo1.png" style="height: 50px;" /> <br>
+                                                                                        C/254 SCOA GBETO , 05 BP 1192<br>
+                                                                                        (+229) 21 60 38 97 / (+229) 96 86 27 28<br>
+                                                                                        info@qualitat-group.net
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <table class="invoice-head" style="margin-top: 20px;">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td class=""><strong>Client : </strong></td>
+                                                                                                    <td>
+                                                                                                        <?php
                                                                                                         $sql = $conn->prepare("SELECT * FROM `devis_client`ORDER BY id DESC LIMIT 1");
                                                                                                         $sql->execute();
                                                                                                         while ($fetch = $sql->fetch()) {
                                                                                                             echo $fetch['c_name'];
-                                                                                                        }  ?></strong><br>
-                                                                                            </address>
-                                                                                        </div>
-                                                                                        <div class="col-xs-4">
-                                                                                            
-                                                                                        </div>
-
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-md-12">
-                                                                                        <h4>Liste des appareils</h4>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <table class="table table-hover">
-                                                                                    <thead>
-                                                                                        <tr>
-                                                                                            <th>#</th>
-                                                                                            <th>Nom de l'appareil</th>
-                                                                                            <th>Puissance</th>
-                                                                                            <th>temps</th>
-
-                                                                                            <th>Energie</th>
-                                                                                        </tr>
-                                                                                    </thead>
-                                                                                    <tbody>
-                                                                                        <?php
-                                                                                        $sql = $conn->prepare("SELECT * FROM `appareil`
-                                                         WHERE devis_client_id = $id_client");
-                                                                                        $sql->execute();
-
-                                                                                        for ($j = 1; $row = $sql->fetch(); $j++) {
-                                                                                            ?>
-                                    
+                                                                                                        }  ?>
+                                                                                                    </td>
+                                                                                                </tr>
                                                                                                 <tr>
-                                                                                                <td><?php echo $j ?></td>
-                                                                                                <td><?php echo $row['app_name'] ?></td>
-                                                                                                <td><?php echo $row['puissance'] ?> watts</td>
-                                                                                                <td><?php echo $row['temps'] ?> Heures</td>
+                                                                                                    <td class="pull-right"><strong>Code #</strong></td>
+                                                                                                    <td><?php echo $id_client;  ?></td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="pull-right"><strong>Date :</strong></td>
+                                                                                                    <?php $date = date('d-m-y');  ?>
+                                                                                                    <td><?php echo $date; ?></td>
+                                                                                                </tr>
 
-                                                                                                <td><?php echo $row['energie'] ?> Kw</td>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br> <br>
 
+                                                                                <div class="grid-container-2">
+                                                                                    <div class="row">
+                                                                                    
+                                                                                        <h2 style="margin-left: 20px;">DEVIS</h2>
+                                                                                        <p style="margin-left: 20px;">Liste des appareils </p>
+                                                                                
+                                                                                
+                                                                                    <div class="span8 well invoice-body">
+                                                                                        <table class="table table-bordered">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th>#</th>
+                                                                                                    <th>Nom de l'appareil</th>
+                                                                                                    <th>Puissance</th>
+                                                                                                    <th>temps</th>
+
+                                                                                                    <th>Energie</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                <?php
+                                                                                                $sql = $conn->prepare("SELECT * FROM `appareil`
+                                                         WHERE devis_client_id = $id_client");
+                                                                                                $sql->execute();
+
+                                                                                                for ($j = 1; $row = $sql->fetch(); $j++) {
+                                                                                                ?>
+
+                                                                                                    <tr>
+                                                                                                        <td><?php echo $j ?></td>
+                                                                                                        <td><?php echo $row['app_name'] ?></td>
+                                                                                                        <td><?php echo $row['puissance'] ?> watts</td>
+                                                                                                        <td><?php echo $row['temps'] ?> Heures</td>
+
+                                                                                                        <td><?php echo $row['energie'] ?> Kw</td>
+
+                                                                                                    </tr>
+                                                                                            </tbody>
+
+                                                                                        <?php } ?>
+                                                                                        <tfoot>
+                                                                                            <?php
+                                                                                            $sqlsump = $conn->prepare("SELECT SUM(puissance)  AS PU
+                                                         FROM appareil WHERE devis_client_id = $id_client");
+                                                                                            $sqlsump->execute();
+                                                                                            $Pu = $sqlsump->fetch(PDO::FETCH_ASSOC);
+                                                                                            $SommePuissance = $Pu['PU'];
+
+                                                                                            $sqlsume = $conn->prepare("SELECT SUM(energie)  AS EN
+                                                         FROM appareil WHERE devis_client_id = $id_client");
+                                                                                            $sqlsume->execute();
+                                                                                            $En = $sqlsume->fetch(PDO::FETCH_ASSOC);
+                                                                                            $SommeEnergie = $En['EN'];
+                                                                                            $EnergieProduite = 0;
+                                                                                            $EnergieProduite = $SommeEnergie + (0.25 * $SommeEnergie);
+                                                                                            $NbPaneaux = ($EnergieProduite * 1000) / 5;
+                                                                                            ?>
+                                                                                            <tr>
+                                                                                                <td></td>
+                                                                                                <td><strong>PUISSANCE TOTAL : </strong></td>
+                                                                                                <td><?php echo $SommePuissance; ?> watts</td>
+                                                                                                <td><strong>ENERGIE TOTAL : </strong></td>
+                                                                                                <td><?php echo $SommeEnergie; ?> Kw</td>
                                                                                             </tr>
-                                                                                    </tbody>
 
-                                                                                <?php } ?>
-                                                                                <tfoot>
-                                                                                    <?php
-                                                                                    $sqlsump = $conn->prepare("SELECT SUM(puissance)  AS PU
-                                                         FROM appareil WHERE devis_client_id = $id_client");
-                                                                                    $sqlsump->execute();
-                                                                                    $Pu = $sqlsump->fetch(PDO::FETCH_ASSOC);
-                                                                                    $SommePuissance = $Pu['PU'];
+                                                                                        </tfoot>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                                
 
-                                                                                    $sqlsume = $conn->prepare("SELECT SUM(energie)  AS EN
-                                                         FROM appareil WHERE devis_client_id = $id_client");
-                                                                                    $sqlsume->execute();
-                                                                                    $En = $sqlsume->fetch(PDO::FETCH_ASSOC);
-                                                                                    $SommeEnergie = $En['EN'];
-                                                                                    $EnergieProduite = 0;
-                                                                                    $EnergieProduite = $SommeEnergie + (0.25 * $EnergieProduite);
-                                                                                    $NbPaneaux = ($EnergieProduite * 1000) / 5;
-                                                                                    ?>
-                                                                                    <tr>
-                                                                                        <td></td>
-                                                                                        <td><strong>PUISSANCE TOTAL : </strong></td>
-                                                                                        <td><?php echo $SommePuissance; ?> watts</td>
-                                                                                        <td><strong>ENERGIE TOTAL : </strong></td>
-                                                                                        <td><?php echo $SommeEnergie; ?> Kw</td>
-                                                                                    </tr>
-
-                                                                                </tfoot>
-                                                                                </table>
                                                                             </div>
-                                                                            <!-- panel-body -->
+
+                                                                            <div class="grid-container-3">
+                                                                                <div class="row">
+                                                                                        <table style="margin-left: 20px;">
+                                                                                            <tr>
+                                                                                                <td>Type depanneau choisi : </td>
+                                                                                                <td id="demo"></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>Nombre de panneau à utiliser : </td>
+                                                                                                <td>
+                                                                                                <td><?php echo $NbPaneaux; ?></td>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </div>
+                                                                            </div>
+
+                                                                            
 
                                                                         </div>
                                                                         <!-- Panel Widget -->
                                                                     </div>
                                                                 </div>
 
-                                                                <div>   
-                                                                    
-                                                                    <p>Ennergie total Produite par le Panneau : <?php echo $EnergieProduite; ?> KW </p>
-                                                                    <p>Nombre de Panneaux : <?php echo $NbPaneaux; ?>  </p>
-                                                                    <p id="demo"></p>   
-                                                                </div>
 
                                                             </div>
                                                             <div class="modal-footer background-login">
                                                                 <button type="button" class="btn vd_btn vd_bg-grey" data-dismiss="modal">Close</button>
-                                                                <button type="button" class="btn vd_btn vd_bg-green" value="click" onclick="printDiv()">Save changes</button>
+                                                                <button type="button" class="btn vd_btn vd_bg-green" value="click" onclick="printDiv('divName')">Save changes</button>
                                                             </div>
                                                         </div>
                                                         <!-- /.modal-content -->
@@ -738,19 +759,6 @@ if (isset($_POST['saveapp'])) {
         <!-- .content -->
 
         <!-- Footer Start -->
-        <footer class="footer-1" id="footer">
-            <div class="vd_bottom ">
-                <div class="container">
-                    <div class="row">
-                        <div class=" col-xs-12">
-                            <div class="copyright">
-                                Copyright &copy;2014 Venmond Inc. All Rights Reserved
-                            </div>
-                        </div>
-                    </div><!-- row -->
-                </div><!-- container -->
-            </div>
-        </footer>
 
     </div>
 
@@ -766,6 +774,7 @@ if (isset($_POST['saveapp'])) {
     <!--[if lt IE 9]>
   <script type="text/javascript" src="js/excanvas.js"></script>      
 <![endif]-->
+    
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src='plugins/jquery-ui/jquery-ui.custom.min.js'></script>
     <script type="text/javascript" src="plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
@@ -810,32 +819,15 @@ if (isset($_POST['saveapp'])) {
     <!-- Sky Icons -->
     <script type="text/javascript" src='plugins/skycons/skycons.js'></script>
     <!-- Script to print the content of a div -->
-    <script>
-        function printDiv() {
-            var divContents = document.getElementById("GFG").innerHTML;
-            var a = window.open('', '', 'height=500, width=500');
-            a.document.write('<html>');
-            a.document.write('<body>');
-            a.document.write(divContents);
-            a.document.write('</body></html>');
-            a.document.close();
-            a.print();
-        }
-    </script>
-    <script>
-        function getddl()
-        {
-           document.getElementById(lblmess).innerHTML=
-           (formid.ddlselect[formid.ddlselect.selectedIndex].text)
-        }
-    </script>
 
-        <script>
+
+
+    <script>
         function myFunction() {
-        var x = document.getElementById("mySelect").value;
-        document.getElementById("demo").innerHTML = "Panneau Choisi :  " + x;
+            var x = document.getElementById("mySelect").value;
+            document.getElementById("demo").innerHTML = "Panneau Choisi :  " + x;
         }
-        </script>
+    </script>
 
 
     <script type="text/javascript">
@@ -1554,8 +1546,23 @@ if (isset($_POST['saveapp'])) {
 
 
     <!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information. -->
-
     <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+
+        }
+    </script>
+    <script>
+
+
+
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-XXXXX-X']);
         _gaq.push(['_trackPageview']);

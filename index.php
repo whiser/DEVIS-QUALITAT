@@ -150,9 +150,9 @@ if (isset($_POST['submit'])) {
                                 <div class="vd_login-page">
                                     <div class="heading clearfix">
                                         <div class="logo">
-                                            <h2 class="mgbt-xs-5"><img src="img/logo.png" alt="logo"></h2>
+                                            <h2 class="mgbt-xs-5"><img src="img/logo1.png" alt="logo"></h2>
                                         </div>
-                                        <h4 class="text-center font-semibold vd_grey">LOGIN TO YOUR ACCOUNT</h4>
+                                        <h4 class="text-center font-semibold vd_grey">Connectez-vous a votre compte</h4>
                                     </div>
                                     <div class="panel widget">
                                     <?php
@@ -194,7 +194,7 @@ if (isset($_POST['submit'])) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div id="vd_login-error" class="alert alert-danger hidden"><i class="fa fa-exclamation-circle fa-fw"></i> Please fill the necessary field </div>
+                                                <div id="vd_login-error" class="alert alert-danger hidden"><i class="fa fa-exclamation-circle fa-fw"></i> Tous les champs sont nécessaire </div>
                                                 <div class="form-group">
                                                     <div class="col-md-12 text-center mgbt-xs-5">
                                                         <button class="btn vd_bg-green vd_white width-100" value="login now" name="submit" type="submit" id="login-submit">Login</button>
@@ -204,7 +204,7 @@ if (isset($_POST['submit'])) {
                                         </div>
                                     </div>
                                     <!-- Panel Widget -->
-                                    <div class="register-panel text-center font-semibold"> <a href="register.php">CREATE AN ACCOUNT<span class="menu-icon"><i class="fa fa-angle-double-right fa-fw"></i></span></a> </div>
+                                    <div class="register-panel text-center font-semibold"> <a href="register.php">Créer un compte<span class="menu-icon"><i class="fa fa-angle-double-right fa-fw"></i></span></a> </div>
                                 </div>
                                 <!-- vd_login-page -->
 
