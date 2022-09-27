@@ -1,0 +1,70 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    padding: 10px;
+}
+
+.grid-container-2 {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    padding: 10px;
+}
+.grid-container-3 {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    padding: 10px;
+}
+
+
+.invoice-head td {
+    padding: 0 8px;
+}
+
+
+
+.invoice-body {
+    background-color: transparent;
+}
+
+@media screen {
+    #printSection {
+        display: none;
+    }
+  }
+  
+  @media print {
+    body * {
+      visibility:hidden;
+    }
+    #printSection, #printSection * {
+      visibility:visible;
+    }
+    #printSection {
+      position:absolute;
+      left:0;
+      top:0;
+    }
+    @page {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+  }
+  
+  
+  
+  
+
+/* @media print {
+    
+        .no-print { display: none!important }
+    
+        
+        
+        body  {
+            
+        }
+    
+    } */

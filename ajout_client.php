@@ -5,17 +5,19 @@ include 'requete.php';
 
 $id_client = $_GET['n'];
 
+
 if (isset($_POST['saveapp'])) {
     try {
         $app_name = $_POST['app_name'];
         $temps = $_POST['temps'];
         $puissance = $_POST['puissance'];
         $energie = $_POST['energie'];
+        $nom_technicien = $user_name;
         $devis_client_id = $id_client;
         $E = $puissance * $temps;
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "INSERT INTO `appareil` (`devis_client_id`,`app_name`,`puissance`,`energie`,`temps`)
-         VALUES ('$devis_client_id','$app_name','$puissance','$E','$temps')";
+        $sql = "INSERT INTO `appareil` (`devis_client_id`,`app_name`,`puissance`,`energie`,`temps`,`nom_technicien`)
+         VALUES ('$devis_client_id','$app_name','$puissance','$E','$temps','$nom_technicien')";
         $conn->exec($sql);
     } catch (PDOException $e) {
         echo $e->getMessage();
@@ -25,121 +27,35 @@ if (isset($_POST['saveapp'])) {
     header('location:ajout_client.php?n=' . $id_client);
 }
 
-if(isset($_POST['update'])){
+if (isset($_POST['update'])) {
 
     $c_name = $_POST['c_name'];
-    
-    
-    $req  = $conn->prepare("UPDATE `devis_client` SET c_name = :c_name WHERE  id = :id");
-    $req ->execute(array(
+    $email = $_POST['email'];
+    $telephone = $_POST['telephone'];
+
+    $req  = $conn->prepare("UPDATE `devis_client` 
+                            SET c_name = :c_name ,email = :email ,telephone = :telephone 
+                            WHERE  id = :id");
+    $req->execute(array(
         'c_name' => $c_name,
-        'id' => $id_client ));
- }
- 
+        'email' => $email,
+        'telephone' => $telephone,
+        'id' => $id_client
+    ));
+}
+
 ?>
 <!DOCTYPE html>
 <html>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
-<head>
-    <meta charset="utf-8" />
-    <title>devis</title>
-    <meta name="keywords" content="HTML5 Template, CSS3, All Purpose Admin Template, " />
-    <meta name="description" content="Responsive Admin Template for multipurpose use">
-    <meta name="author" content="Venmond">
+<?php
+include 'head.php';
+?>
 
-    <!-- Set the viewport width to device width for mobile -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-    <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/ico/apple-touch-icon-144-precomposed.html">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="img/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="img/ico/favicon.png">
-
-
-    <!-- CSS -->
-
-    <!-- Bootstrap & FontAwesome & Entypo CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <!--[if IE 7]><link type="text/css" rel="stylesheet" href="css/font-awesome-ie7.min.css"><![endif]-->
-    <link href="css/font-entypo.css" rel="stylesheet" type="text/css">
-
-    <!-- Fonts CSS -->
-    <link href="css/fonts.css" rel="stylesheet" type="text/css">
-
-    <!-- Plugin CSS -->
-    <link href="plugins/jquery-ui/jquery-ui.custom.min.css" rel="stylesheet" type="text/css">
-    <link href="plugins/prettyPhoto-plugin/css/prettyPhoto.css" rel="stylesheet" type="text/css">
-    <link href="plugins/isotope/css/isotope.css" rel="stylesheet" type="text/css">
-    <link href="plugins/pnotify/css/jquery.pnotify.css" media="screen" rel="stylesheet" type="text/css">
-    <link href="plugins/google-code-prettify/prettify.css" rel="stylesheet" type="text/css">
-
-
-    <link href="plugins/mCustomScrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css">
-    <link href="plugins/tagsInput/jquery.tagsinput.css" rel="stylesheet" type="text/css">
-    <link href="plugins/bootstrap-switch/bootstrap-switch.css" rel="stylesheet" type="text/css">
-    <link href="plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css">
-    <link href="plugins/bootstrap-timepicker/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css">
-    <link href="plugins/colorpicker/css/colorpicker.css" rel="stylesheet" type="text/css">
-
-    <!-- Specific CSS -->
-    <link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet" type="text/css">
-    <link href="plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet" type="text/css">
-    <link href="plugins/introjs/css/introjs.min.css" rel="stylesheet" type="text/css">
-
-    <!-- Theme CSS -->
-    <link href="css/theme.min.css" rel="stylesheet" type="text/css">
-    <!--[if IE]> <link href="css/ie.css" rel="stylesheet" > <![endif]-->
-    <link href="css/chrome.css" rel="stylesheet" type="text/chrome"> <!-- chrome only css -->
-
-
-
-    <!-- Responsive CSS -->
-    <link href="css/theme-responsive.min.css" rel="stylesheet" type="text/css">
-
-
-
-
-    <!-- for specific page in style css -->
-
-    <!-- for specific page responsive in style css -->
-
-
-    <!-- Custom CSS -->
-    <link href="custom/custom.css" rel="stylesheet" type="text/css">
-
-
-
-    <!-- Head SCRIPTS -->
-    <script type="text/javascript" src="js/modernizr.js"></script>
-    <script type="text/javascript" src="js/mobile-detect.min.js"></script>
-    <script type="text/javascript" src="js/mobile-detect-modernizr.js"></script>
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script type="text/javascript" src="js/html5shiv.js"></script>
-      <script type="text/javascript" src="js/respond.min.js"></script>     
-    <![endif]-->
-
-    <script>
-        if(!window.pagedata)
-        {
-            pagedata = {
-
-            };
-        }
-    </script>
-
-</head>
-
-<body id="dashboard" class="full-layout  nav-right-hide nav-right-start-hide  nav-top-fixed responsive    clearfix"
-    data-active="dashboard " data-smooth-scrolling="1">
+<body id="dashboard" class="full-layout  nav-right-hide nav-right-start-hide  nav-top-fixed      responsive    clearfix" data-active="dashboard " data-smooth-scrolling="1">
     <div class="vd_body">
-    <?php
+        <?php
         $select_profile = $conn->prepare("SELECT * FROM `users` WHERE id = ?");
         $select_profile->execute([$user_id]);
         $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
@@ -154,16 +70,12 @@ if(isset($_POST['update'])){
                                 <a href=""><img alt="logo" src="img/logo.png"></a>
                             </div>
                             <!-- logo -->
-                            <div class="vd_panel-menu  hidden-sm hidden-xs"
-                                data-intro="<strong>Minimize Left Navigation</strong><br/>Toggle navigation size to medium or small size. You can set both button or one button only. See full option at documentation."
-                                data-step=1>
-                                <span class="nav-medium-button menu" data-toggle="tooltip" data-placement="bottom"
-                                    data-original-title="Medium Nav Toggle" data-action="nav-left-medium">
+                            <div class="vd_panel-menu  hidden-sm hidden-xs" data-intro="<strong>Minimize Left Navigation</strong><br/>Toggle navigation size to medium or small size. You can set both button or one button only. See full option at documentation." data-step=1>
+                                <span class="nav-medium-button menu" data-toggle="tooltip" data-placement="bottom" data-original-title="Medium Nav Toggle" data-action="nav-left-medium">
                                     <i class="fa fa-bars"></i>
                                 </span>
 
-                                <span class="nav-small-button menu" data-toggle="tooltip" data-placement="bottom"
-                                    data-original-title="Small Nav Toggle" data-action="nav-left-small">
+                                <span class="nav-small-button menu" data-toggle="tooltip" data-placement="bottom" data-original-title="Small Nav Toggle" data-action="nav-left-small">
                                     <i class="fa fa-ellipsis-v"></i>
                                 </span>
 
@@ -176,7 +88,19 @@ if(isset($_POST['update'])){
 
 
                             </div>
+                            <!-- <div class="vd_panel-menu visible-sm visible-xs">
+                	<span class="menu visible-xs" data-action="submenu">
+	                    <i class="fa fa-bars"></i>
+                    </span>        
+                          
+                        <span class="menu visible-sm visible-xs" data-action="toggle-navbar-right">
+                            <i class="fa fa-comments"></i>
+                        </span>                   
+                   	 
+            </div>       -->
+                            <!-- vd_panel-menu -->
                         </div>
+                        <!-- vd_panel-header -->
 
                     </div>
                     <div class="vd_container">
@@ -190,13 +114,13 @@ if(isset($_POST['update'])){
                                         <ul class="mega-ul">
 
                                             <li id="top-menu-profile" class="profile mega-li">
-                                            <a href="#">
+                                                <a href="#" class="mega-link" data-action="click-trigger">
                                                     <span class="mega-image">
                                                         <img src="uploaded_img/<?= $fetch_profile['image']; ?>" alt="">
                                                     </span>
-                                                    <span class="mega-name"> <?= $fetch_profile['name']; ?> <i class="fa fa-caret-down fa-fw"></i>
+                                                    <span class="mega-name"> <?= $fetch_profile['name']; ?>
                                                     </span>
-                                                </a>            
+                                                </a>
                                             </li>
                                         </ul>
                                         <!-- Head menu search form ends -->
@@ -215,94 +139,9 @@ if(isset($_POST['update'])){
         <!-- Header Ends -->
         <div class="content">
             <div class="container">
-                <div class="vd_navbar vd_nav-width vd_navbar-tabs-menu vd_navbar-left  ">
-                    <div class="navbar-menu clearfix">
-                        <div class="vd_panel-menu hidden-xs">
-                            <span data-original-title="Expand All" data-toggle="tooltip" data-placement="bottom" data-action="expand-all" class="menu" data-intro="<strong>Expand Button</strong><br/>To expand all menu on left navigation menu." data-step=4>
-                                <i class="fa fa-sort-amount-asc"></i>
-                            </span>
-                        </div>
-                        <h3 class="menu-title hide-nav-medium hide-nav-small">MENU</h3>
-                        <div class="vd_menu">
-                            <ul>
-                                <li>
-                                    <a href="acceuil.php">
-                                        <span class="menu-icon"><i class="fa fa-code"></i></span>
-                                        <span class="menu-text">Acceuil</span>
-                                        <span class="menu-badge"><span class="badge vd_bg-yellow"><i class="fa fa-star"></i></span></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" data-action="click-trigger">
-                                        <span class="menu-icon"><i class="fa fa-dashboard"></i></span>
-                                        <span class="menu-text">DEVIS</span>
-                                        <span class="menu-badge"><span class="badge vd_bg-black-30"><i class="fa fa-angle-down"></i></span></span>
-                                    </a>
-                                    <div class="child-menu" data-action="click-target">
-                                        <ul>
-                                            <li>
-                                                <a href="creer-devis.php">
-                                                    <span class="menu-text">Créer un devis</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="liste-devis.php">
-                                                    <span class="menu-text">Liste des devis</span>
-                                                </a>
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0);" data-action="click-trigger">
-                                        <span class="menu-icon"><i class="icon-palette"> </i></span>
-                                        <span class="menu-text">Panneau & Onduleur</span>
-                                        <span class="menu-badge"><span class="badge vd_bg-black-30"><i class="fa fa-angle-down"></i></span></span>
-                                    </a>
-                                    <div class="child-menu" data-action="click-target">
-                                        <ul>
-                                            <li>
-                                                <a href="panneau.php">
-                                                    <span class="menu-text">Panneau</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="onduleur.php">
-                                                    <span class="menu-text">Onduleur</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <a href="profile.php">
-                                        <span class="menu-icon"><i class="fa fa-code"></i></span>
-                                        <span class="menu-text">Profil</span>
-                                        <span class="menu-badge"><span class="badge vd_bg-yellow"><i class="fa fa-star"></i></span></span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                            <!-- Head menu search form ends -->
-                        </div>
-                    </div>
-                    <div class="navbar-spacing clearfix">
-                    </div>
-                    <div class="vd_menu vd_navbar-bottom-widget">
-                        <ul>
-                            <li>
-                                <a href="logout.php">
-                                    <span class="menu-icon"><i class="fa fa-sign-out"></i></span>
-                                    <span class="menu-text">Déconnection</span>
-                                </a>
-
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <?php
+                include 'nav.php';
+                ?>
                 <!-- Middle Content Start -->
 
                 <div class="vd_content-wrapper">
@@ -355,10 +194,9 @@ if(isset($_POST['update'])){
                                                                 <td>
                                                                     <h3><?php echo $fetch['c_name'] ?></h3>
                                                                 </td>
-                                                                <td class="menu-action"> 
-                                                                    <a 
-                                                                    class="btn menu-icon vd_bd-yellow vd_yellow" data-toggle="modal" data-target="#editcname">
-                                                                     <i class="fa fa-pencil"></i> </a>
+                                                                <td class="menu-action">
+                                                                    <a class="btn menu-icon vd_bd-yellow vd_yellow" data-toggle="modal" data-target="#editcname">
+                                                                        <i class="fa fa-pencil"></i> </a>
                                                                 </td>
                                                             </tr>
 
@@ -371,18 +209,23 @@ if(isset($_POST['update'])){
                                                     <div class="modal-content">
                                                         <div class="modal-header vd_bg-blue vd_white">
                                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-                                                                <h4 class="modal-title" id="myModalLabel">Modifié le nom du client
-                                                                </h4>
+                                                            <h4 class="modal-title" id="myModalLabel">Modifié les informations du client
+                                                            </h4>
                                                         </div>
                                                         <div class="modal-body">
-                                                                        <div class="row">
-                                                                            <div class="col-md-12">
-                                                                                <form action="" method="POST">
-                                                                                    <input type="text"  name="c_name" value="<?php echo $fetch['c_name'] ?> " > <br> <br>
-                                                                                    <input type="submit" value="Mettre à jour" name="update" class="btn btn-primary" >
-                                                                                </form>
-                                                                            </div>
-                                                                        </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <form action="" method="POST">
+                                                                        <label for="">Nom : </label>
+                                                                        <input type="text" name="c_name" value="<?php echo $fetch['c_name'] ?> "> <br> <br>
+                                                                        <label for="">Email : </label>
+                                                                        <input type="text" name="email" value="<?php echo $fetch['email'] ?> "> <br> <br>
+                                                                        <label for="">Téléphone : </label>
+                                                                        <input type="text" name="telephone" value="<?php echo $fetch['telephone'] ?> "> <br> <br>
+                                                                        <input type="submit" value="Mettre à jour" name="update" class="btn btn-primary">
+                                                                    </form>
+                                                                </div>
+                                                            </div>
                                                         </div><?php } ?>
                                                     </div>
                                                 </div>
@@ -458,8 +301,8 @@ if(isset($_POST['update'])){
                                                             <th>Nom de l'appareil</th>
                                                             <th>Puissance</th>
                                                             <th>temps</th>
-
                                                             <th>Energie</th>
+                                                            <th>Ajouter par</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -476,8 +319,8 @@ if(isset($_POST['update'])){
                                                                 <td><?php echo $fetch['app_name'] ?></td>
                                                                 <td><?php echo $fetch['puissance'] ?> watts</td>
                                                                 <td><?php echo $fetch['temps'] ?> Heures</td>
-
                                                                 <td><?php echo $fetch['energie'] ?> Kw</td>
+                                                                <td><?php echo $fetch['nom_technicien'] ?> </td>
                                                                 <td class="menu-action"> <a href="page/delete/delete_appareil.php?id=<?php echo $fetch['id'] ?>&n=<?php echo $fetch['devis_client_id'] ?>" data-original-title="delete" data-toggle="tooltip" data-placement="top" class="btn menu-icon vd_bd-red vd_red"> <i class="fa fa-times"></i> </a>
                                                                 </td>
                                                             </tr>
@@ -523,245 +366,182 @@ if(isset($_POST['update'])){
                                                 <br />
                                                 <label class="form-label">Choisissez un panneau : </label>
 
-                                                
-                                                
-                                                
+
+
+
                                                 <select id="mySelect" class="form-select" aria-label="Default select example" onchange="myFunction()">
-                                                <option>---</option>
-                                                <?php
-                                                    
-                                                        $sql = $conn->prepare("SELECT * FROM `panneau`");
-                                                        $sql->execute();
-                                                        while ($fetch = $sql->fetch()) {
-                                                            $pan = $fetch['type_panneau']. ' - '. $fetch['tension_panneau'] . 'V - '.$fetch['puissance_panneau'].'KW';
-                                                               ?>
-                                                    <option value="<?php  echo $pan;  ?>">
-                                                       
-                                                    <?php  echo $pan;  ?>
-                                                        
-                                                    </option>  <?php } ?> 
+                                                    <option>---</option>
+                                                    <?php
+
+                                                    $sql = $conn->prepare("SELECT * FROM `panneau`");
+                                                    $sql->execute();
+                                                    while ($fetch = $sql->fetch()) {
+                                                        $ty = $fetch['type_panneau'];
+                                                        $te = $fetch['tension_panneau'];
+                                                        $pu = $fetch['puissance_panneau'];
+                                                        $pan = $fetch['type_panneau'] . ' - ' . $fetch['tension_panneau'] . 'V - ' . $fetch['puissance_panneau'] . 'KW';
+                                                    ?>
+
+                                                        <option value="<?php echo $pan;  ?>">
+                                                            <?php echo $pan;  ?>
+                                                        </option> <?php } ?>
                                                 </select>
 
                                                 <script>
                                                     pagedata.mySelect = document.getElementById("mySelect").value;
-
                                                 </script>
-                                                
-                                                <br><br> 
+
+                                                <br><br>
+                                                <!-- <button class="btn btn-primary " onclick="generatePDF()"> Télécharger le devis </button> -->
+                                                <br><br>
+                                                <center>
+                                                    <a target="_blank" href="impression.php?n=<?php echo $id_client ?>&ty=<?php echo $ty ?>&te=<?php echo $te ?>&pu=<?php echo $pu ?>
+                                                                       ">
+                                                        <button class="btn btn-primary ">Imprimer</button>
+                                                    </a>
+                                                </center>
+                                                <br><br>
+
+
 
                                                 <br><br>
 
-                                                <p>
-                                                    <!-- <button class="btn btn-primary " onclick="generatePDF()"> Télécharger le devis </button> -->
-                                                    <button class="btn btn-primary " data-toggle="modal" data-target="#myModal"> Voir le devis </button>
+                                                <!--  <div class="container print" id="printThis">
 
-                                                </p>
+                                                    <div class="grid-container" style="width: 100%;">
 
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" style="width: 100wh;">
-                                                        <div class="modal-content">
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="panel widget light-widget">
+                                                        <div>
+                                                            <img alt="logo" src="img/logo1.png" style="height: 50px;" /> <br>
+                                                            C/254 SCOA GBETO , 05 BP 1192<br>
+                                                            (+229) 21 60 38 97 / (+229) 96 86 27 28<br>
+                                                            info@qualitat-group.net
+                                                        </div>
+                                                        <div>
+                                                            <table class="invoice-head" style="margin-top: 20px;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class=""><strong>Client : </strong></td>
+                                                                        <td>
+                                                                            <?php
+                                                                            $sql = $conn->prepare("SELECT * FROM `devis_client`ORDER BY id DESC LIMIT 1");
+                                                                            $sql->execute();
+                                                                            while ($fetch = $sql->fetch()) {
+                                                                                echo $fetch['c_name'];
+                                                                            }  ?>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="pull-right"><strong>Code #</strong></td>
+                                                                        <td><?php echo $id_client;  ?></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="pull-right"><strong>Date :</strong></td>
+                                                                        <?php $date = date('d-m-y');  ?>
+                                                                        <td><?php echo $date; ?></td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <br> <br>
+
+                                                    <div class="grid-container-2">
+                                                        <div class="row">
+
+                                                            <h2 style="margin-left: 20px;">DEVIS</h2>
+                                                            <p style="margin-left: 20px;">Liste des appareils </p>
 
 
-                                                                            <div class="container" id="divName">
-                                                                                <style>
-                                                                                    .grid-container {
-                                                                                        display: grid;
-                                                                                        grid-template-columns: auto auto;
-                                                                                        gap: 10px;
-                                                                                        padding: 10px;
-                                                                                    }
+                                                            <div class="span8 well invoice-body">
+                                                                <table class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Nom de l'appareil</th>
+                                                                            <th>Puissance</th>
+                                                                            <th>temps</th>
 
-                                                                                    .grid-container-2 {
-                                                                                        display: grid;
-                                                                                        grid-template-columns: auto auto;
-                                                                                        gap: 10px;
-                                                                                        padding: 10px;
-                                                                                    }
-                                                                                    .grid-container-3 {
-                                                                                        display: grid;
-                                                                                        grid-template-columns: auto auto;
-                                                                                        gap: 10px;
-                                                                                        padding: 10px;
-                                                                                    }
-
-
-                                                                                    .invoice-head td {
-                                                                                        padding: 0 8px;
-                                                                                    }
-
-                                                                                    .container {
-                                                                                        padding-top: 30px;
-                                                                                        padding-left: 20px;
-                                                                                        padding-right: 20px;
-                                                                                        padding-bottom: 20px;
-                                                                                    }
-
-                                                                                    .invoice-body {
-                                                                                        background-color: transparent;
-                                                                                    }
-
-                                                                                    @media print {
-                                                                                        @page {
-                                                                                            margin-top: 0;
-                                                                                            margin-bottom: 0;
-                                                                                        }
-                                                                                        body  {
-                                                                                            padding-top: 5rem;
-                                                                                            padding-bottom: 5rem;
-                                                                                        }
-                                                                                        }
-                                                                                </style>
-                                                                                <div class="grid-container">
-                                                                                    <div>
-                                                                                        <img alt="logo" src="img/logo1.png" style="height: 50px;" /> <br>
-                                                                                        C/254 SCOA GBETO , 05 BP 1192<br>
-                                                                                        (+229) 21 60 38 97 / (+229) 96 86 27 28<br>
-                                                                                        info@qualitat-group.net
-                                                                                    </div>
-                                                                                    <div>
-                                                                                        <table class="invoice-head" style="margin-top: 20px;">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td class=""><strong>Client : </strong></td>
-                                                                                                    <td>
-                                                                                                        <?php
-                                                                                                        $sql = $conn->prepare("SELECT * FROM `devis_client`ORDER BY id DESC LIMIT 1");
-                                                                                                        $sql->execute();
-                                                                                                        while ($fetch = $sql->fetch()) {
-                                                                                                            echo $fetch['c_name'];
-                                                                                                        }  ?>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="pull-right"><strong>Code #</strong></td>
-                                                                                                    <td><?php echo $id_client;  ?></td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="pull-right"><strong>Date :</strong></td>
-                                                                                                    <?php $date = date('d-m-y');  ?>
-                                                                                                    <td><?php echo $date; ?></td>
-                                                                                                </tr>
-
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <br> <br>
-
-                                                                                <div class="grid-container-2">
-                                                                                    <div class="row">
-                                                                                    
-                                                                                        <h2 style="margin-left: 20px;">DEVIS</h2>
-                                                                                        <p style="margin-left: 20px;">Liste des appareils </p>
-                                                                                
-                                                                                
-                                                                                    <div class="span8 well invoice-body">
-                                                                                        <table class="table table-bordered">
-                                                                                            <thead>
-                                                                                                <tr>
-                                                                                                    <th>#</th>
-                                                                                                    <th>Nom de l'appareil</th>
-                                                                                                    <th>Puissance</th>
-                                                                                                    <th>temps</th>
-
-                                                                                                    <th>Energie</th>
-                                                                                                </tr>
-                                                                                            </thead>
-                                                                                            <tbody>
-                                                                                                <?php
-                                                                                                $sql = $conn->prepare("SELECT * FROM `appareil`
+                                                                            <th>Energie</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <?php
+                                                                        $sql = $conn->prepare("SELECT * FROM `appareil`
                                                          WHERE devis_client_id = $id_client");
-                                                                                                $sql->execute();
+                                                                        $sql->execute();
 
-                                                                                                for ($j = 1; $row = $sql->fetch(); $j++) {
-                                                                                                ?>
+                                                                        for ($j = 1; $row = $sql->fetch(); $j++) {
+                                                                        ?>
 
-                                                                                                    <tr>
-                                                                                                        <td><?php echo $j ?></td>
-                                                                                                        <td><?php echo $row['app_name'] ?></td>
-                                                                                                        <td><?php echo $row['puissance'] ?> watts</td>
-                                                                                                        <td><?php echo $row['temps'] ?> Heures</td>
+                                                                            <tr>
+                                                                                <td><?php echo $j ?></td>
+                                                                                <td><?php echo $row['app_name'] ?></td>
+                                                                                <td><?php echo $row['puissance'] ?> watts</td>
+                                                                                <td><?php echo $row['temps'] ?> Heures</td>
 
-                                                                                                        <td><?php echo $row['energie'] ?> Kw</td>
+                                                                                <td><?php echo $row['energie'] ?> Kw</td>
 
-                                                                                                    </tr>
-                                                                                            </tbody>
+                                                                            </tr>
+                                                                    </tbody>
 
-                                                                                        <?php } ?>
-                                                                                        <tfoot>
-                                                                                            <?php
-                                                                                            $sqlsump = $conn->prepare("SELECT SUM(puissance)  AS PU
+                                                                <?php } ?>
+                                                                <tfoot>
+                                                                    <?php
+                                                                    $sqlsump = $conn->prepare("SELECT SUM(puissance)  AS PU
                                                          FROM appareil WHERE devis_client_id = $id_client");
-                                                                                            $sqlsump->execute();
-                                                                                            $Pu = $sqlsump->fetch(PDO::FETCH_ASSOC);
-                                                                                            $SommePuissance = $Pu['PU'];
+                                                                    $sqlsump->execute();
+                                                                    $Pu = $sqlsump->fetch(PDO::FETCH_ASSOC);
+                                                                    $SommePuissance = $Pu['PU'];
 
-                                                                                            $sqlsume = $conn->prepare("SELECT SUM(energie)  AS EN
+                                                                    $sqlsume = $conn->prepare("SELECT SUM(energie)  AS EN
                                                          FROM appareil WHERE devis_client_id = $id_client");
-                                                                                            $sqlsume->execute();
-                                                                                            $En = $sqlsume->fetch(PDO::FETCH_ASSOC);
-                                                                                            $SommeEnergie = $En['EN'];
-                                                                                            $EnergieProduite = 0;
-                                                                                            $EnergieProduite = $SommeEnergie + (0.25 * $SommeEnergie);
-                                                                                            $NbPaneaux = ($EnergieProduite * 1000) / 5;
-                                                                                            ?>
-                                                                                            <tr>
-                                                                                                <td></td>
-                                                                                                <td><strong>PUISSANCE TOTAL : </strong></td>
-                                                                                                <td><?php echo $SommePuissance; ?> watts</td>
-                                                                                                <td><strong>ENERGIE TOTAL : </strong></td>
-                                                                                                <td><?php echo $SommeEnergie; ?> Kw</td>
-                                                                                            </tr>
+                                                                    $sqlsume->execute();
+                                                                    $En = $sqlsume->fetch(PDO::FETCH_ASSOC);
+                                                                    $SommeEnergie = $En['EN'];
+                                                                    $EnergieProduite = 0;
+                                                                    $EnergieProduite = $SommeEnergie + (0.25 * $SommeEnergie);
+                                                                    $NbPaneaux = ($EnergieProduite * 1000) / 5;
+                                                                    ?>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td><strong>PUISSANCE TOTAL : </strong></td>
+                                                                        <td><?php echo $SommePuissance; ?> watts</td>
+                                                                        <td><strong>ENERGIE TOTAL : </strong></td>
+                                                                        <td><?php echo $SommeEnergie; ?> Kw</td>
+                                                                    </tr>
 
-                                                                                        </tfoot>
-                                                                                        </table>
-                                                                                    </div>
-                                                                                </div>
-                                                                                
-
-                                                                            </div>
-
-                                                                            <div class="grid-container-3">
-                                                                                <div class="row">
-                                                                                        <table style="margin-left: 20px;">
-                                                                                            <tr>
-                                                                                                <td>Type depanneau choisi : </td>
-                                                                                                <td id="demoselect"></td>
-                                                                                            </tr>
-                                                                                            <tr>
-                                                                                                <td>Nombre de panneau à utiliser : </td>
-                                                                                                <td>
-                                                                                                <td><?php echo $NbPaneaux; ?></td>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </table>
-                                                                                    </div>
-                                                                            </div>
-
-                                                                            
-
-                                                                        </div>
-                                                                        <!-- Panel Widget -->
-                                                                    </div>
-                                                                </div>
-
-
-                                                            </div>
-                                                            <div class="modal-footer background-login">
-                                                                <button type="button" class="btn vd_btn vd_bg-grey" data-dismiss="modal">Close</button>
-                                                                <button type="button" class="btn vd_btn vd_bg-green" value="click" onclick="printDiv('divName')">Save changes</button>
+                                                                </tfoot>
+                                                                </table>
                                                             </div>
                                                         </div>
-                                                        <!-- /.modal-content -->
+
+
                                                     </div>
-                                                    <!-- /.modal-dialog -->
-                                                </div>
-                                                <!-- /.modal -->
+
+                                                     <div class="grid-container-3">
+                                                        <div class="row">
+                                                            <table style="margin-left: 20px;">
+                                                                <tr>
+                                                                    <td>Type depanneau choisi : </td>
+                                                                    <td></td>
+                                                                    <td id="demoselect"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Nombre de panneau à utiliser : </td>
+                                                                    <td></td>
+                                                                    <td><?php echo $NbPaneaux; ?></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div> -->
+
+                                                <br><br>
+
                                             </div>
                                         </div>
                                         <!-- Panel Widget -->
@@ -793,7 +573,19 @@ if(isset($_POST['update'])){
 
     <!-- .vd_body END  -->
     <a id="back-top" href="#" data-action="backtop" class="vd_back-top visible"> <i class="fa  fa-angle-up"> </i> </a>
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
 
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+
+        }
+    </script>
     <!--
 <a class="back-top" href="#" id="back-top"> <i class="icon-chevron-up icon-white"> </i> </a> -->
 
@@ -803,7 +595,8 @@ if(isset($_POST['update'])){
     <!--[if lt IE 9]>
   <script type="text/javascript" src="js/excanvas.js"></script>      
 <![endif]-->
-    
+
+
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src='plugins/jquery-ui/jquery-ui.custom.min.js'></script>
     <script type="text/javascript" src="plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
@@ -859,707 +652,9 @@ if(isset($_POST['update'])){
     </script>
 
 
-    <script type="text/javascript">
-        $(window).load(function() {
-
-
-
-
-            $.fn.UseTooltip = function() {
-                var previousPoint = null;
-
-                $(this).bind("plothover", function(event, pos, item) {
-                    if (item) {
-                        if (previousPoint != item.dataIndex) {
-
-                            previousPoint = item.dataIndex;
-
-                            $("#tooltip").remove();
-                            var x = item.datapoint[0].toFixed(2),
-                                y = item.datapoint[1].toFixed(2);
-
-                            showTooltip(item.pageX, item.pageY,
-                                "<p class='vd_bg-green'><strong class='mgr-10 mgl-10'>" + Math.round(x) + " NOV 2013 </strong></p>" +
-                                "<div style='padding: 0 10px 10px;'>" +
-                                "<div>" + item.series.label + ": <strong>" + Math.round(y) + "</strong></div>" +
-                                "<div> Profit: <strong>$" + Math.round(y) * 7 + "</strong></div>" +
-                                "</div>"
-                            );
-                        }
-                    } else {
-                        $("#tooltip").remove();
-                        previousPoint = null;
-                    }
-                });
-            };
-
-            function showTooltip(x, y, contents) {
-                $('<div id="tooltip">' + contents + '</div>').css({
-                    position: 'absolute',
-                    display: 'none',
-                    top: y + 5,
-                    left: x + 20,
-                    size: '10',
-                    //				'border-top' : '3px solid #1151ab',
-                    'background-color': '#111111',
-                    color: "#FFFFFF",
-                    opacity: 0.85
-                }).appendTo("body").fadeIn(200);
-            }
-
-
-            /* REVENUE LINE CHART */
-
-            var d2 = [
-                [1, 250],
-                [2, 150],
-                [3, 50],
-                [4, 200],
-                [5, 50],
-                [6, 150],
-                [7, 150],
-                [8, 200],
-                [9, 100],
-                [10, 250],
-                [11, 250],
-                [12, 200],
-                [13, 300]
-
-            ];
-            var d1 = [
-                [1, 650],
-                [2, 550],
-                [3, 450],
-                [4, 550],
-                [5, 350],
-                [6, 500],
-                [7, 600],
-                [8, 450],
-                [9, 300],
-                [10, 600],
-                [11, 400],
-                [12, 500],
-                [13, 700]
-
-            ];
-            var plot = $.plotAnimator($("#revenue-line-chart"), [{
-                    label: "Revenue",
-                    data: d2,
-                    lines: {
-                        fill: 0.4,
-                        lineWidth: 0,
-                    },
-                    color: ['#f2be3e']
-                }, {
-                    data: d1,
-                    animator: {
-                        steps: 60,
-                        duration: 1000,
-                        start: 0
-                    },
-                    lines: {
-                        lineWidth: 2
-                    },
-                    shadowSize: 0,
-                    color: '#F85D2C'
-                }, {
-                    label: "Revenue",
-                    data: d1,
-                    points: {
-                        show: true,
-                        fill: true,
-                        radius: 6,
-                        fillColor: "#F85D2C",
-                        lineWidth: 3
-                    },
-                    color: '#fff',
-                    shadowSize: 0
-                },
-                {
-                    label: "Cost",
-                    data: d2,
-                    points: {
-                        show: true,
-                        fill: true,
-                        radius: 6,
-                        fillColor: "#f2be3e",
-                        lineWidth: 3
-                    },
-                    color: '#fff',
-                    shadowSize: 0
-                }
-            ], {
-                xaxis: {
-                    tickLength: 0,
-                    tickDecimals: 0,
-                    min: 2,
-
-                    font: {
-                        lineHeight: 13,
-                        style: "normal",
-                        weight: "bold",
-                        family: "sans-serif",
-                        variant: "small-caps",
-                        color: "#6F7B8A"
-                    }
-                },
-                yaxis: {
-                    ticks: 3,
-                    tickDecimals: 0,
-                    tickColor: "#f0f0f0",
-                    font: {
-                        lineHeight: 13,
-                        style: "normal",
-                        weight: "bold",
-                        family: "sans-serif",
-                        variant: "small-caps",
-                        color: "#6F7B8A"
-                    }
-                },
-                grid: {
-                    backgroundColor: {
-                        colors: ["#fff", "#fff"]
-                    },
-                    borderWidth: 1,
-                    borderColor: "#f0f0f0",
-                    margin: 0,
-                    minBorderMargin: 0,
-                    labelMargin: 20,
-                    hoverable: true,
-                    clickable: true,
-                    mouseActiveRadius: 6
-                },
-                legend: {
-                    show: false
-                }
-            });
-
-            $("#revenue-line-chart").UseTooltip();
-
-            $(window).on("resize", function() {
-                plot.resize();
-                plot.setupGrid();
-                plot.draw();
-            });
-
-
-            /* REVENUE DONUT CHART */
-
-            var data2 = [],
-                series = 3;
-            var data2 = [{
-                    label: "Men",
-                    data: 35
-                },
-                {
-                    label: "Women",
-                    data: 65
-                }
-            ];
-            var revenue_donut_chart = $("#revenue-donut-chart");
-
-            $("#revenue-donut-chart").bind("plotclick", function(event, pos, item) {
-                if (item) {
-                    $("#clickdata").text(" - click point " + item.dataIndex + " in " + item.series.label);
-                    plot.highlight(item.series, item.datapoint);
-                }
-            });
-            $.plot(revenue_donut_chart, data2, {
-                series: {
-                    pie: {
-                        innerRadius: 0.4,
-                        show: true
-                    }
-                },
-                grid: {
-                    hoverable: true,
-                    clickable: true,
-                },
-                colors: ["#1151ab", "#F85D2C "]
-            });
-
-
-            /* REVENUE BAR CHART */
-
-            var bar_chart_data = [
-                ["Jan", 10],
-                ["Feb", 8],
-                ["Mar", 4],
-                ["Apr", 13],
-                ["May", 17],
-                ["Jun", 9],
-                ["Jul", 10],
-                ["Aug", 8],
-                ["Sep", 4],
-                ["Oct", 13],
-                ["Nov", 17],
-                ["Dec", 9]
-            ];
-
-            var bar_chart = $.plot(
-                $("#revenue-bar-chart"), [{
-                    data: bar_chart_data,
-                    //           color: "rgba(31,174,102, 0.8)",
-                    color: "#F85D2C",
-                    shadowSize: 0,
-                    bars: {
-                        show: true,
-                        lineWidth: 0,
-                        fill: true,
-                        fillColor: {
-                            colors: [{
-                                opacity: 1
-                            }, {
-                                opacity: 1
-                            }]
-                        }
-                    }
-                }], {
-                    series: {
-                        bars: {
-                            show: true,
-                            barWidth: 0.9,
-                            align: "center"
-                        }
-                    },
-                    grid: {
-                        show: true,
-                        hoverable: true,
-                        borderWidth: 0
-                    },
-                    yaxis: {
-                        min: 0,
-                        max: 20,
-                        show: false
-                    },
-                    xaxis: {
-                        mode: "categories",
-                        tickLength: 0,
-                        color: "#FFFFFF",
-                    }
-                });
-
-            var previousPoint2 = null;
-            $("#revenue-bar-chart").bind("plothover", function(event, pos, item) {
-                $("#x").text(pos.x.toFixed(2));
-                $("#y").text(pos.y.toFixed(2));
-                if (item) {
-                    if (previousPoint2 != item.dataIndex) {
-                        previousPoint2 = item.dataIndex;
-                        $("#tooltip").remove();
-                        var x = item.datapoint[0] + 1,
-                            y = item.datapoint[1].toFixed(2);
-                        showTooltip(item.pageX, item.pageY,
-                            "<p class='vd_bg-green'><strong class='mgr-10 mgl-10'>" + x + " - 2013 </strong></p>" +
-                            "<div style='padding: 0 10px 10px;'>" +
-                            "<div> Sales: <strong>" + Math.round(y) * 17 + "</strong></div>" +
-                            "<div> Profit: <strong>$" + Math.round(y) * 280 + "</strong></div>" +
-                            "</div>"
-                        );
-                    }
-                }
-            });
-
-            $('#revenue-bar-chart').bind("mouseleave", function() {
-                $("#tooltip").remove();
-            });
-
-
-
-            /* PIE CHART */
-
-            var pie_placeholder = $("#pie-chart");
-
-            var pie_data = [];
-
-            pie_data[0] = {
-                label: "IE",
-                data: 10
-            }
-            pie_data[1] = {
-                label: "Safari",
-                data: 8
-            }
-            pie_data[2] = {
-                label: "Opera",
-                data: 8
-            }
-            pie_data[3] = {
-                label: "Chrome",
-                data: 13
-            }
-            pie_data[4] = {
-                label: "Firefox",
-                data: 17
-            }
-            pie_data[5] = {
-                label: "Other",
-                data: 3
-            }
-            $.plot(pie_placeholder, pie_data, {
-                series: {
-                    pie: {
-                        show: true,
-                        label: {
-                            show: true,
-                            radius: .5,
-                            formatter: labelFormatter,
-                            background: {
-                                opacity: 0
-                            }
-                        },
-
-                    }
-                },
-                grid: {
-                    hoverable: true,
-                    clickable: true
-                },
-                colors: ["#FCB660", "#ce91db", "#56A2CF", "#52D793", "#FC8660", "#CCCCCC"]
-            });
-
-            pie_placeholder.bind("plothover", function(event, pos, obj) {
-                if (!obj) {
-                    return;
-                }
-                var percent = parseFloat(obj.series.percent).toFixed(2);
-                $("#hover").html("<span style='font-weight:bold; color:" + obj.series.color + "'>" + obj.series.label + " (" + percent + "%)</span>");
-            });
-
-            pie_placeholder.bind("plotclick", function(event, pos, obj) {
-                if (!obj) {
-                    return;
-                }
-                percent = parseFloat(obj.series.percent).toFixed(2);
-                alert("" + obj.series.label + ": " + percent + "%");
-            });
-
-            function labelFormatter(label, series) {
-                return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
-            }
-
-
-
-            var cityAreaData = [
-                500.70,
-                410.16,
-                210.69,
-                120.17,
-                64.31,
-                150.35,
-                130.22,
-                120.71,
-                100.32
-            ]
-            $('#map1').vectorMap({
-                map: 'world_mill_en',
-                scaleColors: ['#C8EEFF', '#0071A4'],
-                normalizeFunction: 'polynomial',
-                focusOn: {
-                    x: 5,
-                    y: 0.56,
-                    scale: 1.7
-                },
-                zoomOnScroll: false,
-                zoomMin: 0.85,
-                hoverColor: false,
-                regionStyle: {
-                    initial: {
-                        fill: '#abe7c8',
-                        "fill-opacity": 1,
-                        stroke: '#abe7c8',
-                        "stroke-width": 0,
-                        "stroke-opacity": 0
-                    },
-                    hover: {
-                        "fill-opacity": 0.8
-                    },
-                    selected: {
-                        fill: 'yellow'
-                    },
-                    selectedHover: {}
-                },
-                markerStyle: {
-                    initial: {
-                        fill: '#F85D2C',
-                        stroke: '#F85D2C',
-                        "fill-opacity": 0.9,
-                        "stroke-width": 10,
-                        "stroke-opacity": 0.5,
-                        r: 3
-                    },
-                    hover: {
-                        stroke: '#F85D2C',
-                        "stroke-width": 14
-                    },
-                    selected: {
-                        fill: 'blue'
-                    },
-                    selectedHover: {}
-                },
-                backgroundColor: '#ffffff',
-                markers: [{
-                        latLng: [50, 0],
-                        name: 'France - 43145 views'
-                    },
-                    {
-                        latLng: [0, 120],
-                        name: 'Indonesia - 145 views'
-                    },
-                    {
-                        latLng: [-25, 130],
-                        name: 'Australia - 486 views'
-                    },
-                    {
-                        latLng: [0, 20],
-                        name: 'Africa - 12 views'
-                    },
-                    {
-                        latLng: [35, 100],
-                        name: 'China - 7890 views'
-                    },
-                    {
-                        latLng: [46, 105],
-                        name: 'Mongolia - 2123 views'
-                    },
-                    {
-                        latLng: [40, 70],
-                        name: 'Kyrgiztan - 87456 views'
-                    },
-                    {
-                        latLng: [58, 50],
-                        name: 'Russia - 4905 views'
-                    },
-                    {
-                        latLng: [35, 135],
-                        name: 'Japan - 87456 views'
-                    }
-                ],
-                series: {
-                    markers: [{
-                        attribute: 'r',
-                        scale: [3, 7],
-                        values: cityAreaData
-                    }]
-                },
-            });
-
-
-            /* REAL TIME CHART */
-
-            var data = [],
-                totalPoints = 300;
-
-            function getRandomData() {
-
-                if (data.length > 0)
-                    data = data.slice(1);
-
-                // Do a random walk
-
-                while (data.length < totalPoints) {
-
-                    var prev = data.length > 0 ? data[data.length - 1] : 50,
-                        y = prev + Math.random() * 10 - 5;
-
-                    if (y < 0) {
-                        y = 0;
-                    } else if (y > 100) {
-                        y = 100;
-                    }
-
-                    data.push(y);
-                }
-
-                // Zip the generated y values with the x values
-
-                var res = [];
-                for (var i = 0; i < data.length; ++i) {
-                    res.push([i, data[i]])
-                }
-
-                return res;
-            }
-
-            // Set up the control widget
-
-            var updateInterval = 30;
-            $("#updateInterval").val(updateInterval).change(function() {
-                var v = $(this).val();
-                if (v && !isNaN(+v)) {
-                    updateInterval = +v;
-                    if (updateInterval < 1) {
-                        updateInterval = 1;
-                    } else if (updateInterval > 2000) {
-                        updateInterval = 2000;
-                    }
-                    $(this).val("" + updateInterval);
-                }
-            });
-
-            var realtime_chart = $.plot("#realtime-chart", [getRandomData()], {
-                series: {
-                    shadowSize: 0, // Drawing is faster without shadows
-                    lines: {
-                        fill: true,
-                        fillColor: "#ffe29c",
-                    },
-                    color: "#ffe29c",
-                },
-                yaxis: {
-                    min: 0,
-                    max: 100
-                },
-                xaxis: {
-                    show: false
-                },
-                grid: {
-                    borderWidth: 0
-                },
-
-            });
-
-            function update() {
-                realtime_chart.setData([getRandomData()]);
-
-                // Since the axes don't change, we don't need to call plot.setupGrid()
-                realtime_chart.draw();
-                setTimeout(update, updateInterval);
-            }
-
-            update();
-
-
-            /* FULL CALENDAR  */
-
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
-
-            $('#calendar').fullCalendar({
-                header: {
-                    left: 'title',
-                    center: '',
-                    right: 'today prev,next'
-                },
-                editable: true,
-                events: [{
-                        title: 'All Day Event',
-                        start: new Date(y, m, 1)
-                    },
-                    {
-                        title: 'Long Event',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2)
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: new Date(y, m, d - 3, 16, 0),
-                        allDay: false
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: new Date(y, m, d + 4, 16, 0),
-                        allDay: false
-                    },
-                    {
-                        title: 'Meeting',
-                        start: new Date(y, m, d, 10, 30),
-                        allDay: false
-                    },
-                    {
-                        title: 'Lunch',
-                        start: new Date(y, m, d, 12, 0),
-                        end: new Date(y, m, d, 14, 0),
-                        allDay: false
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        allDay: false
-                    },
-                    {
-                        title: 'Click for Google',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        url: 'http://google.com/'
-                    }
-                ]
-            });
-
-
-            // Skycons
-
-            var icons = new Skycons({
-                    "color": "white",
-                    "resizeClear": true
-                }),
-                icons_btm = new Skycons({
-                    "color": "#F89C2C",
-                    "resizeClear": true
-                }),
-                list = "clear-day",
-                livd_btm = ["rain", "wind"];
-            icons.set(list, list)
-            for (var i = livd_btm.length; i--;)
-                icons_btm.set(livd_btm[i], livd_btm[i]);
-
-            icons.play();
-            icons_btm.play();
-
-            /* News Widget */
-            $(".vd_news-widget .vd_carousel").carouFredSel({
-                prev: {
-                    button: function() {
-                        return $(this).parent().parent().children('.vd_carousel-control').children('a:first-child')
-                    }
-                },
-                next: {
-                    button: function() {
-                        return $(this).parent().parent().children('.vd_carousel-control').children('a:last-child')
-                    }
-                },
-                scroll: {
-                    fx: "crossfade",
-                    onBefore: function() {
-                        var target = "#front-1-clients";
-                        $(target).css("transition", "all .5s ease-in-out 0s");
-                        if ($(target).hasClass("vd_bg-soft-yellow")) {
-                            $(target).removeClass("vd_bg-soft-yellow");
-                            $(target).addClass("vd_bg-soft-red");
-                        } else
-                        if ($(target).hasClass("vd_bg-soft-red")) {
-                            $(target).removeClass("vd_bg-soft-red");
-                            $(target).addClass("vd_bg-soft-blue");
-                        } else
-                        if ($(target).hasClass("vd_bg-soft-blue")) {
-                            $(target).removeClass("vd_bg-soft-blue");
-                            $(target).addClass("vd_bg-soft-green");
-                        } else
-                        if ($(target).hasClass("vd_bg-soft-green")) {
-                            $(target).removeClass("vd_bg-soft-green");
-                            $(target).addClass("vd_bg-soft-yellow");
-                        }
-                    }
-                },
-                width: "auto",
-                height: "responsive",
-                responsive: true,
-                auto: 3000
-
-            });
-
-
-
-
-
-
-        });
-    </script>
+<?php
+        include 'jsinclude.php';
+    ?>
     <!-- Specific Page Scripts END -->
 
     <script type="text/javascript" src="plugins/dataTables/jquery.dataTables.min.js"></script>
@@ -1575,23 +670,8 @@ if(isset($_POST['update'])){
 
 
     <!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information. -->
+
     <script>
-        function printDiv(divName) {
-            var printContents = document.getElementById(divName).innerHTML;
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-
-            window.print();
-
-            document.body.innerHTML = originalContents;
-
-        }
-    </script>
-    <script>
-
-
-
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-XXXXX-X']);
         _gaq.push(['_trackPageview']);

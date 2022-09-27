@@ -1,5 +1,22 @@
-// JavaScript Document
-jQuery(document).ready(function($){
-	//Put Your Custom Jquery or Javascript Code Here
-	
-});
+document.getElementById("btnPrint").onclick = function () {
+    printElement(document.getElementById("printThis"));
+    
+    
+    window.print();
+}
+
+function printElement(elem) {
+    var domClone = elem.cloneNode(true);
+    
+    var $printSection = document.getElementById("printSection");
+    
+    if (!$printSection) {
+        var $printSection = document.createElement("div");
+        $printSection.id = "printSection";
+        document.body.appendChild($printSection);
+    }
+    
+    $printSection.innerHTML = "";
+    
+    $printSection.appendChild(domClone);
+}

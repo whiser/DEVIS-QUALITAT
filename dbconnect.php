@@ -4,12 +4,6 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "devis";
-/* $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "lednew"; */
-
-// Create connection
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection

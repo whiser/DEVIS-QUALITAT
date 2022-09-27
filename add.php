@@ -1,5 +1,6 @@
 <?php
 include 'config.php';
+include 'sessionstart.php';
 
 	if(ISSET($_POST['savepanneau'])){
 		try{
@@ -36,9 +37,14 @@ include 'config.php';
 	}
 	if(ISSET($_POST['saveclient'])){
 		try{
-			$c_name = $_POST['c_name'];
+			$c_name = $_POST['c_name']; 
+			$email = $_POST['email'];
+			$telephone = $_POST['telephone'];
+			
+			$nom_technicien = $user_name;
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$sql = "INSERT INTO `devis_client` (`c_name`) VALUES ('$c_name')";
+			$sql = "INSERT INTO `devis_client` (`c_name`,`nom_technicien`,`email`,`telephone`) 
+				VALUES ('$c_name','$nom_technicien','$email','$telephone')";
 			$conn->exec($sql);
 			$id_client = $conn->lastInsertId();
 
@@ -47,6 +53,5 @@ include 'config.php';
 		}
 		
 		$conn = null;
-		header('location:ajout_client.php?n='.$id_client);
+		header('location:ajout_client.php?n='.$id_client);	
 	}
-?>

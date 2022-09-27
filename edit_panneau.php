@@ -2,8 +2,28 @@
 
 include 'sessionstart.php';
 include 'requete.php';
+$panneau_id = $_GET['id'];
+?>
+<?php
+if (isset($_POST['editpanneau'])) {
 
-
+    $type_panneau = $_POST['type_panneau'];
+    $tension_panneau = $_POST['tension_panneau'];
+    $puissance_panneau = $_POST['puissance_panneau'];
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $req  = $conn->prepare("UPDATE `panneau` 
+                            SET type_panneau = :type_panneau ,
+                            tension_panneau = :tension_panneau,
+                            puissance_panneau = :puissance_panneau
+                            WHERE  panneau_id = :panneau_id");
+    $req->execute(array(
+        'type_panneau' => $type_panneau,
+        'tension_panneau' => $tension_panneau,
+        'puissance_panneau' => $puissance_panneau,
+        'panneau_id' => $panneau_id
+    ));
+    header('location:panneau.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -116,7 +136,7 @@ include 'head.php';
                             </div>
                             <div class="vd_title-section clearfix">
                                 <div class="vd_panel-header">
-                                    <h1>Liste des devis</h1>
+                                    <h1>Panneau</h1>
 
                                 </div>
                             </div>
@@ -125,48 +145,55 @@ include 'head.php';
                                     <div class="col-md-12">
                                         <div class="panel widget">
                                             <div class="panel-heading vd_bg-grey">
-                                                <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-dot-circle-o"></i> </span> Liste des devis </h3>
+                                                <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-bar-chart-o"></i> </span> Modifier un panneau </h3>
                                             </div>
-                                            <div class="panel-body table-responsive">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal" method="POST" action="">
 
-                                                <table class="table table-striped" id="data-tables">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Nom du client</th>
-                                                            <th>Date</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        $sql = $conn->prepare("SELECT * FROM `devis_client`ORDER BY id DESC ");
-                                                        $sql->execute();
-                                                        for ($j = 1; $row = $sql->fetch(); $j++) {
-                                                        ?>
+                                                    <div class="form-group">
+                                                        <label class="col-12 control-label">Type de panneau</label>
+                                                        <div class="col-12 controls">
+                                                            <select name="type_panneau">
+                                                                <option value="mono-crystalin">Mono-Crytalin</option>
+                                                                <option value="poly-crytalin">Poly-Crytalin</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
 
-                                                            <tr>
-                                                                <td><?php echo $j ?></td>
-                                                                <td><?php echo $row['c_name'] ?></td>
-                                                                <td><?php echo $row['date'] ?></td>
-                                                                <td class="menu-action">
-                                                                    <a href="ajout_client.php?n=<?php echo $row['id'] ?>">
-                                                                        <button type="button" class="btn vd_btn vd_bg-blue ">Voir le devis</button>
-                                                                    </a>
-                                                                </td>
-                                                            </tr>
-                                                        <?php } ?>
-                                                    </tbody>
-                                                </table>
+                                                    <div class="form-group">
+                                                        <label class="col-12 control-label">Tension</label>
+                                                        <div class="col-12 controls">
+                                                            <select name="tension_panneau">
+                                                                <option value="10">10V</option>
+                                                                <option value="300">300V</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
 
+                                                    <div class="form-group">
+                                                        <label class="col-12 control-label">Puissance</label>
+                                                        <div class="col-12 controls">
+                                                            <select name="puissance_panneau">
+                                                                <option value="10">100 Kw</option>
+                                                                <option value="300">300 Kw</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group form-actions">
+                                                        <div class="col-12">
+                                                            <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="editpanneau"><i class="icon-ok"></i> Modifié</button>
+                                                            <button class="btn vd_btn" type="button">Annuler</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                        <!-- Panel Widget -->
                                     </div>
                                     <!-- col-md-12 -->
                                 </div>
                             </div>
-
                         </div>
                         <!-- .vd_content -->
                     </div>
@@ -249,7 +276,16 @@ include 'head.php';
     ?>
     <!-- Specific Page Scripts END -->
 
+    <script type="text/javascript" src="plugins/dataTables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="plugins/dataTables/dataTables.bootstrap.js"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            "use strict";
+
+            $('#data-tables').dataTable();
+        });
+    </script>
 
 
     <!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information. -->
@@ -267,17 +303,6 @@ include 'head.php';
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(ga, s);
         })();
-    </script>
-
-    <script type="text/javascript" src="plugins/dataTables/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="plugins/dataTables/dataTables.bootstrap.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            "use strict";
-
-            $('#data-tables').dataTable();
-        });
     </script>
 
 </body>
