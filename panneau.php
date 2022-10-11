@@ -135,8 +135,8 @@ include 'head.php';
                                                         <label class="col-12 control-label">Type de panneau</label>
                                                         <div class="col-12 controls">
                                                             <select name="type_panneau">
-                                                                <option value="mono-crystalin">Mono-Crytalin</option>
-                                                                <option value="poly-crytalin">Poly-Crytalin</option>
+                                                                <option value="mono_crystalin">Mono Crytalin</option>
+                                                                <option value="poly_crytalin">Poly Crytalin</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -144,20 +144,15 @@ include 'head.php';
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Tension</label>
                                                         <div class="col-12 controls">
-                                                            <select name="tension_panneau">
-                                                                <option value="10">10V</option>
-                                                                <option value="300">300V</option>
-                                                            </select>
+                                                            
+                                                            <input type="number" min="0" name="tension_panneau">
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Puissance</label>
                                                         <div class="col-12 controls">
-                                                            <select name="puissance_panneau">
-                                                                <option value="10">100 Kw</option>
-                                                                <option value="300">300 Kw</option>
-                                                            </select>
+                                                            <input type="number" min="0" name="puissance_panneau">
                                                         </div>
                                                     </div>
 

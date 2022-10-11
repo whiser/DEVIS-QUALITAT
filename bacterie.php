@@ -2,28 +2,9 @@
 
 include 'sessionstart.php';
 include 'requete.php';
-$panneau_id = $_GET['id'];
-?>
-<?php
-if (isset($_POST['editpanneau'])) {
 
-    $type_panneau = $_POST['type_panneau'];
-    $tension_panneau = $_POST['tension_panneau'];
-    $puissance_panneau = $_POST['puissance_panneau'];
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $req  = $conn->prepare("UPDATE `panneau` 
-                            SET type_panneau = :type_panneau ,
-                            tension_panneau = :tension_panneau,
-                            puissance_panneau = :puissance_panneau
-                            WHERE  panneau_id = :panneau_id");
-    $req->execute(array(
-        'type_panneau' => $type_panneau,
-        'tension_panneau' => $tension_panneau,
-        'puissance_panneau' => $puissance_panneau,
-        'panneau_id' => $panneau_id
-    ));
-    header('location:panneau.php');
-}
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -136,64 +117,91 @@ include 'head.php';
                             </div>
                             <div class="vd_title-section clearfix">
                                 <div class="vd_panel-header">
-                                    <h1>Panneau</h1>
+                                    <h1>Bactéries</h1>
 
                                 </div>
                             </div>
                             <div class="vd_content-section clearfix">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-3">
                                         <div class="panel widget">
                                             <div class="panel-heading vd_bg-grey">
-                                                <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-bar-chart-o"></i> </span> Modifier un panneau </h3>
+                                                <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-bar-chart-o"></i> </span> Ajouter une bactéries </h3>
                                             </div>
                                             <div class="panel-body">
-                                            <?php
-                                                    $sql = $conn->prepare("SELECT * FROM `panneau` WHERE panneau_id = $panneau_id ");
-                                                    $sql->execute();
-                                                    while ($fetch = $sql->fetch()) {
-                                                        ?>
-                                                <form class="form-horizontal" method="POST" action="">
-
-                                                    <div class="form-group">
-                                                        <label class="col-12 control-label">Type de panneau</label>
-                                                        <div class="col-12 controls">
-                                                            <select name="type_panneau">
-                                                                <option value="mono-crystalin">Mono-Crytalin</option>
-                                                                <option value="poly-crytalin">Poly-Crytalin</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                <form class="form-horizontal" method="POST" action="add.php">
 
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Tension</label>
-                                                        <div class="col-12 controls">
-                                                        <input type="number" min="0" name="tension_panneau" value="<?php echo $fetch['tension_panneau'] ?>">
-                                                            
+                                                        <div class="col-12 controls"></option>
+                                                            </select>
+                                                            <input type="number" min="0" name="tension_bacterie">
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Puissance</label>
                                                         <div class="col-12 controls">
-                                                        <input type="number" min="0" name="puissance_panneau" value="<?php echo $fetch['puissance_panneau'] ?>">
-                                                            
+                                                            <input type="number" min="0" name="energie_bacterie">
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group form-actions">
                                                         <div class="col-12">
-                                                            <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="editpanneau"><i class="icon-ok"></i> Modifié</button>
+                                                            <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="savebacterie"><i class="icon-ok"></i> Valider</button>
                                                             <button class="btn vd_btn" type="button">Annuler</button>
                                                         </div>
                                                     </div>
                                                 </form>
-                                                <?php } ?>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="panel widget">
+                                            <div class="panel-heading vd_bg-grey">
+                                                <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-dot-circle-o"></i> </span> Liste des bactéries </h3>
+                                            </div>
+                                            <div class="panel-body table-responsive">
+                                                <table class="table table-striped" id="data-tables">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Tension</th>
+                                                            <th>Energie</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>    
+                                                    <tbody>
+                                                        <?php
+                                                        $sql = $conn->prepare("SELECT * FROM `bacterie`");
+                                                        $sql->execute();
+                                                        while ($fetch = $sql->fetch()) {
+                                                        ?>
+                                                            <tr>
+                                                                <td><?php echo $fetch['bacterie_id'] ?></td>
+                                                                <td><?php echo $fetch['tension_bacterie'] ?> V</td>
+                                                                <td><?php echo $fetch['energie_bacterie'] ?> Ah</td>
+                                                                <td class="menu-action">
+                                                                    <a href="edit_bacterie.php?id=<?php echo $fetch['bacterie_id'] ?>">
+                                                                        <button class="btn menu-icon vd_bd-yellow vd_yellow"> <i class="fa fa-pencil"></i>
+                                                                        </button>
+                                                                    </a>
+                                                                    <a href="page/delete/delete_bacterie.php?id=<?php echo $fetch['bacterie_id'] ?>" data-original-title="delete" data-toggle="tooltip" data-placement="top" class="btn menu-icon vd_bd-red vd_red"> <i class="fa fa-times"></i> </a>
+                                                                </td>
+                                                            </tr>
+
+
+                                                    </tbody>
+                                                <?php } ?>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- Panel Widget -->
                                     </div>
                                     <!-- col-md-12 -->
                                 </div>
                             </div>
+
                         </div>
                         <!-- .vd_content -->
                     </div>

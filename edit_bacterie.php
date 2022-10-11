@@ -2,27 +2,24 @@
 
 include 'sessionstart.php';
 include 'requete.php';
-$panneau_id = $_GET['id'];
+$bacterie_id = $_GET['id'];
 ?>
 <?php
-if (isset($_POST['editpanneau'])) {
+if (isset($_POST['editbacterie'])) {
 
-    $type_panneau = $_POST['type_panneau'];
-    $tension_panneau = $_POST['tension_panneau'];
-    $puissance_panneau = $_POST['puissance_panneau'];
+    $tension_bacterie = $_POST['tension_bacterie'];
+    $energie_bacterie = $_POST['energie_bacterie'];
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $req  = $conn->prepare("UPDATE `panneau` 
-                            SET type_panneau = :type_panneau ,
-                            tension_panneau = :tension_panneau,
-                            puissance_panneau = :puissance_panneau
-                            WHERE  panneau_id = :panneau_id");
+    $req  = $conn->prepare("UPDATE `bacterie` 
+                            SET tension_bacterie = :tension_bacterie ,
+                            energie_bacterie = :energie_bacterie
+                            WHERE  bacterie_id = :bacterie_id");
     $req->execute(array(
-        'type_panneau' => $type_panneau,
-        'tension_panneau' => $tension_panneau,
-        'puissance_panneau' => $puissance_panneau,
-        'panneau_id' => $panneau_id
+        'tension_bacterie' => $tension_bacterie,
+        'energie_bacterie' => $energie_bacterie,
+        'bacterie_id' => $bacterie_id
     ));
-    header('location:panneau.php');
+    header('location:bacterie.php');
 }
 ?>
 <!DOCTYPE html>
@@ -136,7 +133,7 @@ include 'head.php';
                             </div>
                             <div class="vd_title-section clearfix">
                                 <div class="vd_panel-header">
-                                    <h1>Panneau</h1>
+                                    <h1>Bacterie</h1>
 
                                 </div>
                             </div>
@@ -145,30 +142,20 @@ include 'head.php';
                                     <div class="col-md-12">
                                         <div class="panel widget">
                                             <div class="panel-heading vd_bg-grey">
-                                                <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-bar-chart-o"></i> </span> Modifier un panneau </h3>
+                                                <h3 class="panel-title"> <span class="menu-icon"> <i class="fa fa-bar-chart-o"></i> </span> Ajouter une bactérie </h3>
                                             </div>
                                             <div class="panel-body">
                                             <?php
-                                                    $sql = $conn->prepare("SELECT * FROM `panneau` WHERE panneau_id = $panneau_id ");
+                                                    $sql = $conn->prepare("SELECT * FROM `bacterie` WHERE bacterie_id = $bacterie_id ");
                                                     $sql->execute();
                                                     while ($fetch = $sql->fetch()) {
                                                         ?>
                                                 <form class="form-horizontal" method="POST" action="">
 
-                                                    <div class="form-group">
-                                                        <label class="col-12 control-label">Type de panneau</label>
-                                                        <div class="col-12 controls">
-                                                            <select name="type_panneau">
-                                                                <option value="mono-crystalin">Mono-Crytalin</option>
-                                                                <option value="poly-crytalin">Poly-Crytalin</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
+                                                <div class="form-group">
                                                         <label class="col-12 control-label">Tension</label>
                                                         <div class="col-12 controls">
-                                                        <input type="number" min="0" name="tension_panneau" value="<?php echo $fetch['tension_panneau'] ?>">
+                                                        <input type="number" min="0" name="tension_bacterie" value="<?php echo $fetch['tension_bacterie'] ?>">
                                                             
                                                         </div>
                                                     </div>
@@ -176,13 +163,14 @@ include 'head.php';
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Puissance</label>
                                                         <div class="col-12 controls">
-                                                        <input type="number" min="0" name="puissance_panneau" value="<?php echo $fetch['puissance_panneau'] ?>">
+                                                        <input type="number" min="0" name="energie_bacterie" value="<?php echo $fetch['energie_bacterie'] ?>">
                                                             
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group form-actions">
                                                         <div class="col-12">
-                                                            <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="editpanneau"><i class="icon-ok"></i> Modifié</button>
+                                                            <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="editbacterie"><i class="icon-ok"></i> Modifié</button>
                                                             <button class="btn vd_btn" type="button">Annuler</button>
                                                         </div>
                                                     </div>

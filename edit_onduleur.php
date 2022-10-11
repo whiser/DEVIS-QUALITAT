@@ -134,7 +134,7 @@ include 'head.php';
                             <div class="vd_title-section clearfix">
                                 <div class="vd_panel-header">
                                     <h1>Onduleur</h1>
-
+                                   
                                 </div>
                             </div>
                             <div class="vd_content-section clearfix">
@@ -146,24 +146,22 @@ include 'head.php';
                                             </div>
                                             <div class="panel-body">
                                                 <form class="form-horizontal" method="POST" action="">
-
+                                                <?php
+                                                    $sql = $conn->prepare("SELECT * FROM `onduleur` WHERE onduleur_id = $onduleur_id ");
+                                                    $sql->execute();
+                                                    while ($fetch = $sql->fetch()) {
+                                                        ?>
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Puissance</label>
                                                         <div class="col-12 controls">
-                                                            <select name="puissance_onduleur">
-                                                                <option value="100">100 Kw</option>
-                                                                <option value="200">200 Kw</option>
-                                                            </select>
+                                                            <input type="number" min="0" name="puissance_onduleur" value="<?php echo $fetch['puissance_onduleur'] ?>">
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Tension</label>
                                                         <div class="col-12 controls">
-                                                            <select name="tension_onduleur">
-                                                                <option value="10">10V</option>
-                                                                <option value="300">300V</option>
-                                                            </select>
+                                                            <input type="number" min="0" name="tension_onduleur" value="<?php echo $fetch['tension_onduleur'] ?>">
                                                         </div>
                                                     </div>
 
@@ -172,6 +170,7 @@ include 'head.php';
                                                             <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="editonduleur"><i class="icon-ok"></i> Modifié</button>
                                                             <button class="btn vd_btn" type="button">Annuler</button>
                                                         </div>
+                                                        <?php } ?>
                                                     </div>
                                                 </form>
                                             </div>

@@ -153,27 +153,7 @@ include 'head.php';
                                                     <span class="mega-name"> <?= $fetch_profile['name']; ?> <i class="fa fa-caret-down fa-fw"></i>
                                                     </span>
                                                 </a>
-                                                <div class="vd_mega-menu-content  width-xs-2  left-xs left-sm" data-action="click-target">
-                                                    <div class="child-menu">
-                                                        <div class="content-list content-menu">
-                                                            <ul class="list-wrapper pd-lr-10">
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-user"></i></div>
-                                                                        <div class="menu-text">Voir le profil</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-trophy"></i></div>
-                                                                        <div class="menu-text">Editer le profil</div>
-                                                                    </a> </li>
-                                                                <li> <a href="#">
-                                                                        <div class="menu-icon"><i class=" fa fa-sign-out"></i></div>
-                                                                        <div class="menu-text">Se déconnecter</div>
-                                                                    </a> </li>
-                                                                <li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                
 
                                             </li>
                                         </ul>

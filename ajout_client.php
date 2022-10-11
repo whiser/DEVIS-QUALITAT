@@ -346,7 +346,27 @@ include 'head.php';
                                                     $sqlsume->execute();
                                                     $En = $sqlsume->fetch(PDO::FETCH_ASSOC);
                                                     $SommeEnergie = $En['EN'];
-                                                    ?>
+                                                    $EnergieProduite = 0;
+                                                        $EnergieProduite = $SommeEnergie + (0.25 * $SommeEnergie);
+                                                        $NbPaneaux = ($EnergieProduite * 1000) / 5;
+                                                        $ten_ali = 0;
+                                                        $capacite = 0;
+                                                        if($EnergieProduite<=1000){
+                                                            $ten_ali = 12 ;
+                                                        }
+                                                        elseif($EnergieProduite>1000 AND $EnergieProduite<=2300){
+                                                            $ten_ali = 24 ;
+                                                        }
+                                                        else{
+                                                            $ten_ali = 48 ;
+                                                        }
+                                                        ?>
+                                                        <?php 
+                                                        $capacite = ($EnergieProduite * 1)/(0.8 * $ten_ali);
+                                                        $capacite = (round( $capacite));
+                                                        $pc = ($EnergieProduite)/5;
+                                                        ?>
+                                                    
                                                     <tr>
                                                         <td></td>
                                                         <td><strong>PUISSANCE TOTAL : </strong></td>
@@ -364,42 +384,116 @@ include 'head.php';
 
                                                 </table><br />
                                                 <br />
-                                                <label class="form-label">Choisissez un panneau : </label>
+                                                <div class="card-body">
+                        <div class="d-md-flex flex-md-wrap">
+                            <div class="pt-2 mb-3 wmin-md-400 ml-auto">
+                                <h6 class="mb-3 text-left">Total</h6>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th class="text-left">Puissance Totale :</th>
+                                                <td class="text-right"><?php echo $SommePuissance; ?> W</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Energie Totale Consommé : <!-- <span class="font-weight-normal">(25%)</span> --></th>
+                                                <td class="text-right"><?php echo $SommeEnergie; ?> Wh</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Energie Totale Produite :</th>
+                                                <td class="text-right"><?php echo $EnergieProduite; ?> Wh</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">La tension d'alimentation est :</th>
+                                                <td class="text-right"><?php echo $ten_ali; ?> V</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">La capacité de la bactérie est :</th>
+                                                <td class="text-right"><?php echo $capacite; ?> V</td>
+                                            </tr>
+                                            <form method="post" action="impr.php?n=<?php echo $id_client ?>">
+                                            <tr>
+                                                <th class="text-left">Choisir la bactérie adéquat : </th>
+                                                <td class="text-right">
+                                                    
+                                                        <select name="choix_bacterie" id="choix_bacterie">
+                                                        <?php
+                                                        $sql = $conn->prepare("SELECT * FROM `bacterie`");
+                                                        $sql->execute();
+                                                        echo "<option>---</option>";
+                                                        while ($fetch = $sql->fetch()) {
+                                                            
+                                                            echo "<option value=".$eb=$fetch['energie_bacterie']."-".$tb=$fetch['tension_bacterie'].">".$fetch['energie_bacterie']." Ah  - ".$fetch['tension_bacterie']." V </option>\n";
+                                                        } ?> 
+                                                        </select>
+                                                     <br>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Régulateur :</th>
+                                                <td class="text-right"><?php echo $ten_ali; ?> V /<?php echo $capacite; ?> Ah</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Puissance crete :</th>
+                                                <td class="text-right"><?php echo $pc; ?> W</td>
+                                            </tr>
 
+                                            <tr>
+                                                <th class="text-left">Choisir le panneau adéquat : </th>
+                                                <td class="text-right">
+                                                    
+                                                        <select name="choix_panneau" id="choix_panneau">
+                                                        <?php
+                                                        $sql = $conn->prepare("SELECT * FROM `panneau`");
+                                                        $sql->execute();
+                                                        echo "<option>---</option>";
+                                                        while ($fetch = $sql->fetch()) {
+                                                            echo "<option value=".$tp=$fetch['type_panneau']."-".$tp=$fetch['tension_panneau']."-".$pp=$fetch['puissance_panneau'].">".$fetch['type_panneau']."  - ".$fetch['tension_panneau']." V  - ".$fetch['puissance_panneau']." KWh </option>\n";
+                                                        } ?> 
+                                                        </select>
+                                                    
+                                                </td>
+                                            </tr>
 
-
-
-                                                <select id="mySelect" class="form-select" aria-label="Default select example" onchange="myFunction()">
-                                                    <option>---</option>
-                                                    <?php
-
-                                                    $sql = $conn->prepare("SELECT * FROM `panneau`");
-                                                    $sql->execute();
-                                                    while ($fetch = $sql->fetch()) {
-                                                        $ty = $fetch['type_panneau'];
-                                                        $te = $fetch['tension_panneau'];
-                                                        $pu = $fetch['puissance_panneau'];
-                                                        $pan = $fetch['type_panneau'] . ' - ' . $fetch['tension_panneau'] . 'V - ' . $fetch['puissance_panneau'] . 'KW';
-                                                    ?>
-
-                                                        <option value="<?php echo $pan;  ?>">
-                                                            <?php echo $pan;  ?>
-                                                        </option> <?php } ?>
-                                                </select>
-
-                                                <script>
+                                            <tr>
+                                                <th class="text-left">Choisir l'onduleur : </th>
+                                                <td class="text-right">
+                                                    
+                                                        <select name="choix_onduleur" id="choix_onduleur">
+                                                        <?php
+                                                        $sql = $conn->prepare("SELECT * FROM `onduleur`");
+                                                        $sql->execute();
+                                                        echo "<option>---</option>";
+                                                        while ($fetch = $sql->fetch()) {
+                                                            echo "<option value=".$tp=$fetch['tension_onduleur']."-".$tp=$fetch['puissance_onduleur'].">".$fetch['tension_onduleur']." V - ".$fetch['puissance_onduleur']." KWh </option>\n";
+                                                        } ?> 
+                                                        </select>
+                                                    
+                                                </td>
+                                            </tr>
+                                            
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                                    
+                            </div>
+                        </div>
+                    </div>
+                                                
+                                                <!-- <script>
                                                     pagedata.mySelect = document.getElementById("mySelect").value;
-                                                </script>
+                                                </script> -->
 
                                                 <br><br>
                                                 <!-- <button class="btn btn-primary " onclick="generatePDF()"> Télécharger le devis </button> -->
                                                 <br><br>
                                                 <center>
-                                                    <a target="_blank" href="impression.php?n=<?php echo $id_client ?>&ty=<?php echo $ty ?>&te=<?php echo $te ?>&pu=<?php echo $pu ?>
-                                                                       ">
-                                                        <button class="btn btn-primary ">Imprimer</button>
-                                                    </a>
-                                                </center>
+                                                    <!-- <a target="_blank" href="impression.php?n=<?php echo $id_client ?>&tb=<?php echo $tb ?>&enb=<?php echo $eb ?>">
+                                                        <button  class="btn btn-primary ">Imprimer</button> </a>-->
+                                                        <button class="btn vd_btn vd_bg-green vd_white" type="submit" name="impr"> Imprimer</button>
+                                                    
+                                                </center> </form>
                                                 <br><br>
 
 

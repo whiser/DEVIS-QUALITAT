@@ -134,20 +134,14 @@ include 'head.php';
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Puissance</label>
                                                         <div class="col-12 controls">
-                                                            <select name="puissance_onduleur">
-                                                                <option value="100">100 Kw</option>
-                                                                <option value="200">200 Kw</option>
-                                                            </select>
+                                                            <input type="number" min="0" name="puissance_onduleur">
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="col-12 control-label">Tension</label>
                                                         <div class="col-12 controls">
-                                                            <select name="tension_onduleur">
-                                                                <option value="10">10V</option>
-                                                                <option value="300">300V</option>
-                                                            </select>
+                                                            <input type="number" min="0" name="tension_onduleur">
                                                         </div>
                                                     </div>
 

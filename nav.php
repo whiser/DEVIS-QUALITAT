@@ -47,7 +47,7 @@
                                 <li>
                                     <a href="javascript:void(0);" data-action="click-trigger">
                                         <span class="menu-icon"><i class="icon-palette"> </i></span>
-                                        <span class="menu-text">Panneau & Onduleur</span>
+                                        <span class="menu-text">Accessoires</span>
                                         <span class="menu-badge"><span class="badge vd_bg-black-30"><i
                                                     class="fa fa-angle-down"></i></span></span>
                                     </a>
@@ -61,6 +61,11 @@
                                             <li>
                                                 <a href="onduleur.php">
                                                     <span class="menu-text">Onduleur</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="bacterie.php">
+                                                    <span class="menu-text">Bactéries</span>
                                                 </a>
                                             </li>
                                         </ul>

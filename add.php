@@ -20,6 +20,22 @@ include 'sessionstart.php';
 
 	}
 
+	if(ISSET($_POST['savebacterie'])){
+		try{
+			$tension_bacterie = $_POST['tension_bacterie'];
+			$energie_bacterie = $_POST['energie_bacterie'];
+			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$sql = "INSERT INTO `bacterie` (`tension_bacterie`, `energie_bacterie`) VALUES ('$tension_bacterie', '$energie_bacterie')";
+			$conn->exec($sql);
+		}catch(PDOException $e){
+			echo $e->getMessage();
+		}
+		
+		$conn = null;
+		header('location:bacterie.php');
+        
+	}
+
     if(ISSET($_POST['saveonduleur'])){
 		try{
 			$puissance_onduleur = $_POST['puissance_onduleur'];

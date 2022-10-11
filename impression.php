@@ -4,9 +4,13 @@ include 'sessionstart.php';
 include 'requete.php';
 
 $id_client = $_GET['n'];
-$ty  = $_GET['ty'];
-$te = $_GET['te'];
-$pu = $_GET['pu'];
+$teo = $_GET['teo'];
+$puo = $_GET['puo'];
+$tyb = $_GET['tyb'];
+$teb = $_GET['teb'];
+$typ = $_GET['typ'];
+$tep = $_GET['tep'];
+$pp = $_GET['pp'];
 
 ?>
 <!DOCTYPE html>
@@ -242,6 +246,35 @@ $pu = $_GET['pu'];
                             ?>
                             <?php 
                             $capacite = ($EnergieProduite * 1)/(0.8 * $ten_ali);
+                            $capacite = (round( $capacite));
+
+                            $n_serie = $capacite/$tyb;
+                            $n_serie = (round( $n_serie));
+
+                            $n_b_serie = $ten_ali/$teb;
+                            $n_b_serie = (round( $n_b_serie));
+
+                            $pc = ($EnergieProduite)/5;
+
+                            $np = $pc/$pp;
+                            $np = (round( $np));
+                            //$npp = $np * $pp * 5;
+                            if($np%2==0)
+                            {
+                                $npp = $np * $pp * 5;
+                                if($npp<$EnergieProduite)
+                                {
+                                    $np = $np + 2;
+                                }
+                                else{
+                                    $np = $np;
+                                }
+                            }
+                            else
+                            {
+                                    $np = $np + 1;
+                            }
+
                             ?>
                             
                             <tr>
@@ -283,20 +316,49 @@ $pu = $_GET['pu'];
                                                 <td class="text-right"><?php echo $capacite; ?> V</td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left">Type de panneaux Choisi :</th>
+                                                <th class="text-left">Type de Bactéries Choisie :</th>
                                                 
-                                                <td class="text-right">
-                                                    <ul>
-                                                        <li><?php echo $ty; ?></li>
-                                                        <li><?php echo $te; ?> volt</li>
-                                                        <li><?php echo $pu; ?> watts</li>
-                                                    </ul>
-                                                    
+                                                <td class="text-right"><?php echo $teb; ?>V  /  <?php echo $tyb; ?>Ah
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left">Nombre de Panneaux à utiliser :</th>
-                                                <td class="text-right"><?php echo $NbPaneaux; ?></td>>
+                                                <th class="text-left">Nombre de Série :</th>
+                                                <td class="text-right"><?php echo $n_serie; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Nombre de Bactéries par Séries :</th>
+                                                <td class="text-right"><?php echo $n_b_serie; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Régulateur :</th>
+                                                <td class="text-right"><?php echo $ten_ali; ?>V /<?php echo $capacite; ?>Ah</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Puissance crete :</th>
+                                                <td class="text-right"><?php echo $pc; ?>W</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Le type de Panneau Utilisé est :</th>
+                                                <td class="text-right">
+                                                    <ul>
+                                                        <li><?php echo $typ; ?></li>
+                                                        <li>Tension : <?php echo $tep; ?> V</li>
+                                                        <li>Puissance : <?php echo $pp; ?> KWh</li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Nombre de paneau à installer :</th>
+                                                <td class="text-right"><?php echo $np; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left">Onduleur Choisi :</th>
+                                                <td class="text-right">
+                                                    <ul>
+                                                        <li>Tension : <?php echo $teo; ?> V</li>
+                                                        <li>Puissance : <?php echo $puo; ?> KWh</li>
+                                                    </ul>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -325,7 +387,7 @@ $pu = $_GET['pu'];
                     console.log(window);
                     var opt = {
                         margin: 1,
-                        filename: 'myfile.pdf',
+                        filename: 'devis_qualitat.pdf',
                         image: {
                             type: 'jpeg',
                             quality: 0.98
@@ -340,7 +402,6 @@ $pu = $_GET['pu'];
                         }
                     };
                     html2pdf().from(invoice).set(opt).save();
-                    location.href = 'acceuil.php';
                 })
                 
                 document.getElementById("download2")
@@ -350,7 +411,7 @@ $pu = $_GET['pu'];
                     console.log(window);
                     var opt = {
                         margin: 1,
-                        filename: 'myfile.pdf',
+                        filename: 'devis_qualitat.pdf',
                         image: {
                             type: 'jpeg',
                             quality: 0.98
